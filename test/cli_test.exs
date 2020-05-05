@@ -3,7 +3,7 @@ defmodule GameOfLife.CLITest do
   alias GameOfLife.CLI
   doctest GameOfLife.CLI
 
-  describe "Cell.parse_args/1" do
+  describe "CLI.parse_args/1" do
     test "with all args" do
       options = CLI.parse_args(["--generations", "50", "--grid-size", "100"])
 
