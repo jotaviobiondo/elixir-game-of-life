@@ -1,5 +1,4 @@
 defmodule GameOfLife do
-
   def start(generations \\ 5, grid_size \\ 10) do
     initial_grid = random_grid(grid_size)
     print_grid(initial_grid, grid_size)
@@ -56,7 +55,7 @@ defmodule GameOfLife do
     end
   end
 
-  defp print_grid(grid, size \\ 10) do
+  defp print_grid(grid, size) do
     Enum.each(0..(size - 1), fn x ->
       Enum.each(0..(size - 1), fn y ->
         is_alive = grid[{x, y}]
