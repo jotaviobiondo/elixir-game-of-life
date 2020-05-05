@@ -1,21 +1,11 @@
 defmodule GameOfLife do
   def start(generations \\ 5, grid_size \\ 10) do
-    initial_grid = random_grid(grid_size)
-    print_grid(initial_grid, grid_size)
-
-    Enum.reduce(
-      1..generations,
-      initial_grid,
-      fn _, current_grid ->
-        next_gen = next_generation(current_grid)
-
-        print_grid(next_gen, grid_size)
-
-        Process.sleep(500)
-
-        next_gen
-      end
-    )
+    Stream.iterate(random_grid(grid_size), &next_generation/1)
+    |> Enum.take(generations)
+    |> Enum.each(fn grid ->
+      print_grid(grid, grid_size)
+      Process.sleep(500)
+    end)
   end
 
   defp next_generation(grid) do
