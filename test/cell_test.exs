@@ -4,10 +4,12 @@ defmodule GameOfLife.CellTest do
   doctest GameOfLife.Cell
 
   test "Cell.random/0 only contains :dead or :alive values" do
-    frequency_keys = Stream.repeatedly(&Cell.random/0)
-    |> Stream.take(50)
-    |> Enum.frequencies()
-    |> Map.keys()
+    frequency_keys =
+      (&Cell.random/0)
+      |> Stream.repeatedly()
+      |> Stream.take(50)
+      |> Enum.frequencies()
+      |> Map.keys()
 
     assert frequency_keys == [:alive, :dead]
   end
