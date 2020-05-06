@@ -22,19 +22,14 @@ defmodule GameOfLife.GridTest do
              }
     end
 
-    test "wrong size for cell matrix" do
+    test "wrong size for cell matrix (not a square matrix)" do
       cell_matrix = [
         [:dead, :dead],
         [:dead, :dead],
         [:dead, :dead]
       ]
 
-      assert_raise(
-        ArgumentError,
-        fn ->
-          Grid.new(cell_matrix)
-        end
-      )
+      assert_raise(ArgumentError, fn -> Grid.new(cell_matrix) end)
     end
   end
 
@@ -48,6 +43,18 @@ defmodule GameOfLife.GridTest do
     assert grid.cells
            |> Map.values()
            |> Enum.all?(&(&1 == :dead))
+  end
+
+  test "Grid.new_random/1" do
+    size = 20
+    grid = Grid.new_random(size)
+
+    assert grid.size == size
+    assert Enum.count(grid.cells) == size * size
+
+    assert grid.cells
+           |> Map.values()
+           |> Enum.all?(&(&1 in [:alive, :dead]))
   end
 
   test "Grid.neighbours/1" do
