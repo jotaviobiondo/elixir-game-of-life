@@ -3,23 +3,20 @@ defmodule GameOfLife.CellTest do
   alias GameOfLife.Cell
   doctest GameOfLife.Cell
 
-  test "cell should not be alive when created" do
-    cell = %Cell{}
-
-    assert cell.alive == false
-  end
-
   describe "Cell.to_string/1" do
     test "when dead" do
-      cell = %Cell{}
-
-      assert Cell.to_string(cell) == "   "
+      assert Cell.to_string(:dead) == "   "
     end
 
     test "when alive" do
-      cell = %Cell{alive: true}
+      assert Cell.to_string(:alive) == " x "
+    end
 
-      assert Cell.to_string(cell) == " x "
+    test "both representations must have the same length" do
+      str_alive = Cell.to_string(:alive)
+      str_dead = Cell.to_string(:dead)
+
+      assert String.length(str_alive) == String.length(str_dead)
     end
   end
 

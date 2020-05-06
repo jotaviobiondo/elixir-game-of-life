@@ -1,14 +1,10 @@
 defmodule GameOfLife.Cell do
   @moduledoc false
 
-  @type t :: %__MODULE__{
-          alive: boolean()
-        }
-
-  defstruct alive: false
+  @type t :: :alive | :dead
 
   @spec to_string(t) :: String.t()
-  def to_string(cell) do
-    if cell.alive, do: " x ", else: "   "
-  end
+  def to_string(:alive), do: " x "
+  def to_string(:dead), do: "   "
+
 end
