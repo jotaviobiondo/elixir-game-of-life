@@ -4,14 +4,14 @@ defmodule GameOfLife.Grid do
   alias GameOfLife.Grid
   alias GameOfLife.Cell
 
-  @type position :: {integer(), integer()}
+  @type position :: {integer, integer}
   @type cells :: %{required(position) => Cell.t()}
   @type cell_matrix :: [[Cell.t()]]
-  @type size :: pos_integer()
+  @type size :: pos_integer
 
   @type t :: %__MODULE__{
           cells: cells,
-          size: pos_integer()
+          size: size
         }
 
   @enforce_keys [:cells]
@@ -22,12 +22,12 @@ defmodule GameOfLife.Grid do
     validate_matrix_is_square!(cell_matrix)
 
     size = Enum.count(cell_matrix)
-    cells = cells_from_matrix(cell_matrix, size)
+    cells = matrix_to_cells(cell_matrix, size)
 
     %Grid{cells: cells, size: size}
   end
 
-  @spec validate_matrix_is_square!(cell_matrix) :: no_return()
+  @spec validate_matrix_is_square!(cell_matrix) :: no_return
   defp validate_matrix_is_square!(matrix) do
     columns_count = Enum.count(matrix)
 
@@ -39,8 +39,8 @@ defmodule GameOfLife.Grid do
     unless all_rows_has_same_size, do: raise(ArgumentError, "matrix is not square")
   end
 
-  @spec cells_from_matrix(cell_matrix, size) :: cells
-  defp cells_from_matrix(cell_matrix, size) do
+  @spec matrix_to_cells(cell_matrix, size) :: cells
+  defp matrix_to_cells(cell_matrix, size) do
     for x <- 0..(size - 1),
         y <- 0..(size - 1),
         into: %{} do
@@ -81,7 +81,7 @@ defmodule GameOfLife.Grid do
     end
   end
 
-  @spec alive_neighbours(%Grid{}, position) :: non_neg_integer()
+  @spec alive_neighbours(%Grid{}, position) :: non_neg_integer
   def alive_neighbours(grid, cell) do
     cell
     |> neighbours()
