@@ -50,26 +50,18 @@ defmodule GameOfLife.Grid do
 
   @spec new_empty(size) :: %Grid{}
   def new_empty(size) do
-    cells =
-      for x <- 0..(size - 1),
-          y <- 0..(size - 1),
-          into: %{} do
-        {{x, y}, :dead}
-      end
-
-    %Grid{cells: cells, size: size}
+    List.duplicate(:dead, size)
+    |> List.duplicate(size)
+    |> new()
   end
 
   @spec new_random(size) :: %Grid{}
   def new_random(size) do
-    cells =
-      for x <- 0..(size - 1),
-          y <- 0..(size - 1),
-          into: %{} do
-        {{x, y}, Cell.random()}
-      end
-
-    %Grid{cells: cells, size: size}
+    (&Cell.random/0)
+    |> Stream.repeatedly()
+    |> Stream.take(size * size)
+    |> Enum.chunk_every(size)
+    |> new()
   end
 
   @spec neighbours(position) :: [position]
