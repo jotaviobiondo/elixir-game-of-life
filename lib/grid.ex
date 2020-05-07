@@ -17,7 +17,7 @@ defmodule GameOfLife.Grid do
   @enforce_keys [:cells]
   defstruct [:cells, size: 10]
 
-  @spec new(cell_matrix) :: %Grid{}
+  @spec new(cell_matrix) :: t
   def new(cell_matrix) do
     validate_matrix_is_square!(cell_matrix)
 
@@ -48,14 +48,15 @@ defmodule GameOfLife.Grid do
     end
   end
 
-  @spec new_empty(size) :: %Grid{}
+  @spec new_empty(size) :: t
   def new_empty(size) do
-    List.duplicate(:dead, size)
+    :dead
+    |> List.duplicate(size)
     |> List.duplicate(size)
     |> new()
   end
 
-  @spec new_random(size) :: %Grid{}
+  @spec new_random(size) :: t
   def new_random(size) do
     (&Cell.random/0)
     |> Stream.repeatedly()
@@ -64,24 +65,28 @@ defmodule GameOfLife.Grid do
     |> new()
   end
 
-  @spec neighbours(position) :: [position]
-  def neighbours({cell_x, cell_y}) do
+  @spec neighbors(t, position) :: MapSet.t(position)
+  def neighbors(grid, {cell_x, cell_y}) do
     for offset_x <- [-1, 0, 1],
         offset_y <- [-1, 0, 1],
-        {offset_x, offset_y} != {0, 0} do
-      {offset_x + cell_x, offset_y + cell_y}
+        neighbor = {offset_x + cell_x, offset_y + cell_y},
+        inside_grid?(grid, neighbor) and {offset_x, offset_y} != {0, 0},
+        into: MapSet.new() do
+      neighbor
     end
   end
 
-  @spec alive_neighbours(%Grid{}, position) :: non_neg_integer
-  def alive_neighbours(grid, cell_position) do
-    cell_position
-    |> neighbours()
-    |> Enum.map(fn neighbour -> get(grid, neighbour) end)
+  @spec inside_grid?(t, position) :: boolean
+  def inside_grid?(grid, {x, y}), do: x in 0..(grid.size - 1) and y in 0..(grid.size - 1)
+
+  @spec alive_neighbors(t, position) :: non_neg_integer
+  def alive_neighbors(grid, cell_position) do
+    grid
+    |> neighbors(cell_position)
+    |> Enum.map(fn neighbor -> get(grid, neighbor) end)
     |> Enum.count(&(&1 == :alive))
   end
 
-  @spec get(%Grid{}, position) :: Cell.t()
+  @spec get(t, position) :: Cell.t()
   def get(grid, cell_position), do: Map.get(grid.cells, cell_position, :dead)
-
 end
