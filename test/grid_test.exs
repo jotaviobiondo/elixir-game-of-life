@@ -105,4 +105,28 @@ defmodule GameOfLife.GridTest do
     assert Grid.alive_neighbors(grid, {3, 2}) == 4
     assert Grid.alive_neighbors(grid, {3, 3}) == 3
   end
+
+  describe "Grid.get_cell/2" do
+    setup do
+      cell_matrix = [
+        [:dead, :alive],
+        [:dead, :alive]
+      ]
+
+      {:ok, grid: Grid.new(cell_matrix)}
+    end
+
+    test "valid positions", %{grid: grid} do
+      assert Grid.get_cell(grid, {0, 0}) == :dead
+      assert Grid.get_cell(grid, {0, 1}) == :alive
+      assert Grid.get_cell(grid, {1, 0}) == :dead
+      assert Grid.get_cell(grid, {1, 1}) == :alive
+    end
+
+    test "invalid positions must return :dead as default value", %{grid: grid} do
+      assert Grid.get_cell(grid, {-1, 0}) == :dead
+      assert Grid.get_cell(grid, {0, -1}) == :dead
+      assert Grid.get_cell(grid, {-1, -1}) == :dead
+    end
+  end
 end
