@@ -74,10 +74,14 @@ defmodule GameOfLife.Grid do
   end
 
   @spec alive_neighbours(%Grid{}, position) :: non_neg_integer
-  def alive_neighbours(grid, cell) do
-    cell
+  def alive_neighbours(grid, cell_position) do
+    cell_position
     |> neighbours()
-    |> Enum.map(fn neighbour -> Map.get(grid.cells, neighbour, false) end)
+    |> Enum.map(fn neighbour -> get(grid, neighbour) end)
     |> Enum.count(&(&1 == :alive))
   end
+
+  @spec get(%Grid{}, position) :: Cell.t()
+  def get(grid, cell_position), do: Map.get(grid.cells, cell_position, :dead)
+
 end
