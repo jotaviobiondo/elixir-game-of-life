@@ -22,6 +22,11 @@ defmodule GameOfLife.GridTest do
              }
     end
 
+    test "empty cell matrix" do
+      assert_raise(ArgumentError, fn -> Grid.new([]) end)
+      assert_raise(ArgumentError, fn -> Grid.new([[]]) end)
+    end
+
     test "wrong size for cell matrix (not a square matrix)" do
       cell_matrix = [
         [:dead, :dead],
