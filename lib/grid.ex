@@ -19,7 +19,8 @@ defmodule GameOfLife.Grid do
 
   @spec new(cell_matrix) :: t
   def new(cell_matrix) do
-    with {:ok, cell_matrix} <- validate_matrix_is_square(cell_matrix) do
+    with {:ok, cell_matrix} <- validate_not_empty(cell_matrix),
+         {:ok, cell_matrix} <- validate_matrix_is_square(cell_matrix) do
       size = Enum.count(cell_matrix)
       cells = matrix_to_cells(cell_matrix, size)
 
@@ -29,14 +30,16 @@ defmodule GameOfLife.Grid do
     end
   end
 
+  @spec validate_not_empty(cell_matrix) :: {:ok, cell_matrix} | {:error, String.t()}
+  defp validate_not_empty([]), do: {:error, "matrix can not be empty"}
+  defp validate_not_empty([[]]), do: {:error, "matrix can not be empty"}
+  defp validate_not_empty(matrix), do: {:ok, matrix}
+
   @spec validate_matrix_is_square(cell_matrix) :: {:ok, cell_matrix} | {:error, String.t()}
   defp validate_matrix_is_square(matrix) do
     columns_count = Enum.count(matrix)
 
-    all_rows_has_same_size =
-      Enum.all?(matrix, fn row ->
-        Enum.count(row) == columns_count
-      end)
+    all_rows_has_same_size = Enum.all?(matrix, fn row -> Enum.count(row) == columns_count end)
 
     if all_rows_has_same_size, do: {:ok, matrix}, else: {:error, "matrix is not square"}
   end
