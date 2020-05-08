@@ -15,10 +15,7 @@ defmodule GameOfLife do
 
   @spec next_generation(Grid.t()) :: Grid.t()
   def next_generation(grid) do
-    new_cells =
-      for cell <- grid.cells, into: %{} do
-        next_cell_generation(grid, cell)
-      end
+    new_cells = Map.new(grid.cells, fn cell -> next_cell_generation(grid, cell) end)
 
     %Grid{cells: new_cells, size: grid.size}
   end
