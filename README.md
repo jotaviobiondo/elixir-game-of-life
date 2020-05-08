@@ -3,3 +3,36 @@
 
 A [Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) implementation to learn Elixir.
 
+
+## Usage
+
+### Requirements
+- [Elixir 1.10](https://elixir-lang.org/install.html)
+
+Install the dependencies:
+```
+mix deps.get
+```
+
+### Running Tests
+
+Execute the following command to run the tests:
+
+```
+mix test
+```
+
+### Running the CLI
+
+To run the CLI, execute the following script:
+```
+./run.sh
+```
+
+The CLI accepts the following optional arguments:
+- `--generations` or `-g`: The number of generations (iterations). Default: 5.
+- `--grid-size` or `-s`: The size of the grid. Default: 10.
+
+## TODO
+- [ ] Web interface with phoenix LiveView.
+
