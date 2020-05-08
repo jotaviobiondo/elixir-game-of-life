@@ -1,61 +1,30 @@
 defmodule GameOfLife do
+  alias GameOfLife.Grid
+
+  @spec start(pos_integer, pos_integer) :: no_return
   def start(generations \\ 5, grid_size \\ 10) do
-    Stream.iterate(random_grid(grid_size), &next_generation/1)
-    |> Enum.take(generations)
-    |> Enum.each(fn grid ->
-      print_grid(grid, grid_size)
+    Grid.new_random(grid_size)
+    |> Stream.iterate(&next_generation/1)
+    |> Stream.take(generations)
+    |> Stream.map(&Grid.to_string/1)
+    |> Enum.each(fn grid_str ->
+      IO.puts(grid_str)
       Process.sleep(500)
     end)
   end
 
+  @spec next_generation(Grid.t()) :: Grid.t()
   defp next_generation(grid) do
-    for {cell, is_alive} <- grid, into: %{} do
-      case {is_alive, alive_neighbours(grid, cell)} do
-        {true, alive_neighbours} when alive_neighbours in [2, 3] -> {cell, false}
-        {false, alive_neighbours} when alive_neighbours == 3 -> {cell, true}
-        _ -> {cell, is_alive}
+    new_cells =
+      for {position, cell} <- grid.cells, into: %{} do
+        case {cell, Grid.alive_neighbors(grid, position)} do
+          {:alive, 2} -> {position, :alive}
+          {:alive, 3} -> {position, :alive}
+          {:dead, 3} -> {position, :alive}
+          _ -> {position, :dead}
+        end
       end
-    end
-  end
 
-  defp alive_neighbours(grid, cell) do
-    for offset_x <- -1..1,
-        offset_y <- -1..1,
-        {offset_x, offset_y} != {0, 0} do
-      {cell_x, cell_y} = cell
-      {offset_x + cell_x, offset_y + cell_y}
-    end
-    |> Enum.map(fn neighbour -> Map.get(grid, neighbour, false) end)
-    |> Enum.count(&(&1 == true))
-  end
-
-  defp empty_grid(size) do
-    for x <- 1..(size - 1),
-        y <- 1..(size - 1),
-        into: %{} do
-      {{x, y}, false}
-    end
-  end
-
-  defp random_grid(size) do
-    for x <- 1..(size - 1),
-        y <- 1..(size - 1),
-        into: %{} do
-      {{x, y}, Enum.random([true, false])}
-    end
-  end
-
-  defp print_grid(grid, size) do
-    Enum.each(0..(size - 1), fn x ->
-      Enum.each(0..(size - 1), fn y ->
-        is_alive = grid[{x, y}]
-
-        if is_alive, do: IO.write("| x "), else: IO.write("|   ")
-      end)
-
-      IO.puts("")
-    end)
-
-    IO.puts("------------------------------------------------------------")
+    %Grid{cells: new_cells, size: grid.size}
   end
 end
