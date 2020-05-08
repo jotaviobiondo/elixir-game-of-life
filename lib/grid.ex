@@ -6,7 +6,7 @@ defmodule GameOfLife.Grid do
 
   @type position :: {integer, integer}
   @type cells :: %{required(position) => Cell.t()}
-  @type cell_matrix :: [[Cell.t()]]
+  @type cell_matrix :: [[integer]]
   @type size :: pos_integer
 
   @type t :: %__MODULE__{
@@ -49,7 +49,9 @@ defmodule GameOfLife.Grid do
     for x <- 0..(size - 1),
         y <- 0..(size - 1),
         into: %{} do
-      {{x, y}, cell_matrix |> Enum.at(x) |> Enum.at(y)}
+      cell = cell_matrix |> Enum.at(x) |> Enum.at(y) |> Cell.from_int()
+
+      {{x, y}, cell}
     end
   end
 
@@ -82,7 +84,7 @@ defmodule GameOfLife.Grid do
   end
 
   @spec inside_grid?(t, position) :: boolean
-  def inside_grid?(grid, {x, y}), do: x in 0..(grid.size - 1) and y in 0..(grid.size - 1)
+  defp inside_grid?(grid, {x, y}), do: x in 0..(grid.size - 1) and y in 0..(grid.size - 1)
 
   @spec alive_neighbors(t, position) :: non_neg_integer
   def alive_neighbors(grid, cell_position) do
