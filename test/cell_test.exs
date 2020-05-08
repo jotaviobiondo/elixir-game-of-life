@@ -29,4 +29,34 @@ defmodule GameOfLife.CellTest do
       assert String.length(str_alive) == String.length(str_dead)
     end
   end
+
+  describe "from_int/1" do
+    test "valid arguments" do
+      assert Cell.from_int(0) == :dead
+      assert Cell.from_int(1) == :alive
+      assert Cell.from_int(-10) == :alive
+      assert Cell.from_int(10) == :alive
+    end
+
+    test "invalid arguments" do
+      assert_raise(FunctionClauseError, fn -> Cell.from_int("0") end)
+      assert_raise(FunctionClauseError, fn -> Cell.from_int(1.0) end)
+      assert_raise(FunctionClauseError, fn -> Cell.from_int(:dead) end)
+      assert_raise(FunctionClauseError, fn -> Cell.from_int(:alive) end)
+      assert_raise(FunctionClauseError, fn -> Cell.from_int(nil) end)
+    end
+  end
+
+  describe "to_int/1" do
+    test "valid arguments" do
+      assert Cell.to_int(:alive) == 1
+      assert Cell.to_int(:dead) == 0
+    end
+
+    test "invalid arguments" do
+      assert_raise(FunctionClauseError, fn -> Cell.to_int(1) end)
+      assert_raise(FunctionClauseError, fn -> Cell.to_int("dead") end)
+      assert_raise(FunctionClauseError, fn -> Cell.to_int(nil) end)
+    end
+  end
 end
