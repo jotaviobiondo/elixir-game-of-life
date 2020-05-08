@@ -94,4 +94,33 @@ defmodule GameOfLife.Grid do
 
   @spec get_cell(t, position) :: Cell.t()
   def get_cell(grid, cell_position), do: Map.get(grid.cells, cell_position, :dead)
+
+  @spec to_string(t) :: String.t()
+  def to_string(grid) do
+    grid_str =
+      grid.cells
+      |> Map.keys()
+      |> Enum.sort()
+      |> Enum.map_join("|", fn position ->
+        cell_str = get_cell(grid, position) |> Cell.to_string()
+
+        k = grid.size - 1
+
+        case position do
+          {0, 0} -> "|#{cell_str}"
+          {^k, ^k} -> "#{cell_str}|"
+          {_, ^k} -> "#{cell_str}|\n"
+          {_, _} -> cell_str
+        end
+      end)
+
+    grid_str_size = grid_str |> String.codepoints() |> Enum.find_index(&(&1 == "\n"))
+    border = String.duplicate("-", grid_str_size - 2)
+
+    """
+    +#{border}+
+    #{grid_str}
+    +#{border}+
+    """
+  end
 end
