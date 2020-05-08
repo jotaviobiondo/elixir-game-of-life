@@ -6,8 +6,8 @@ defmodule GameOfLife.GridTest do
   describe "Grid.new/1" do
     test "valid cell matrix" do
       cell_matrix = [
-        [:alive, :alive],
-        [:dead, :dead]
+        [1, 1],
+        [0, 0]
       ]
 
       grid = Grid.new(cell_matrix)
@@ -29,9 +29,9 @@ defmodule GameOfLife.GridTest do
 
     test "wrong size for cell matrix (not a square matrix)" do
       cell_matrix = [
-        [:dead, :dead],
-        [:dead, :dead],
-        [:dead, :dead]
+        [0, 0],
+        [0, 0],
+        [0, 0]
       ]
 
       assert_raise(ArgumentError, fn -> Grid.new(cell_matrix) end)
@@ -85,10 +85,10 @@ defmodule GameOfLife.GridTest do
 
   test "Grid.alive_neighbors/2" do
     cell_matrix = [
-      [:dead, :dead, :dead, :alive],
-      [:dead, :dead, :alive, :dead],
-      [:alive, :alive, :alive, :alive],
-      [:dead, :dead, :alive, :alive]
+      [0, 0, 0, 1],
+      [0, 0, 1, 0],
+      [1, 1, 1, 1],
+      [0, 0, 1, 1]
     ]
 
     grid = Grid.new(cell_matrix)
@@ -114,8 +114,8 @@ defmodule GameOfLife.GridTest do
   describe "Grid.get_cell/2" do
     setup do
       cell_matrix = [
-        [:dead, :alive],
-        [:dead, :alive]
+        [0, 1],
+        [0, 1]
       ]
 
       {:ok, grid: Grid.new(cell_matrix)}
@@ -137,10 +137,10 @@ defmodule GameOfLife.GridTest do
 
   test "Grid.to_string/1" do
     cell_matrix = [
-      [:dead, :dead, :dead, :alive],
-      [:dead, :dead, :alive, :dead],
-      [:alive, :alive, :alive, :alive],
-      [:dead, :dead, :alive, :alive]
+      [0, 0, 0, 1],
+      [0, 0, 1, 0],
+      [1, 1, 1, 1],
+      [0, 0, 1, 1]
     ]
 
     grid = Grid.new(cell_matrix)
