@@ -1,3 +1,3 @@
 #!/bin/bash
 
-mix escript.build && escript game_of_life
+mix escript.build && escript game_of_life "$@"
