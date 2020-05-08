@@ -134,4 +134,25 @@ defmodule GameOfLife.GridTest do
       assert Grid.get_cell(grid, {-1, -1}) == :dead
     end
   end
+
+  test "Grid.to_string/1" do
+    cell_matrix = [
+      [:dead, :dead, :dead, :alive],
+      [:dead, :dead, :alive, :dead],
+      [:alive, :alive, :alive, :alive],
+      [:dead, :dead, :alive, :alive]
+    ]
+
+    grid = Grid.new(cell_matrix)
+
+    assert Grid.to_string(grid) ==
+             """
+             +---------------+
+             |   |   |   | x |
+             |   |   | x |   |
+             | x | x | x | x |
+             |   |   | x | x |
+             +---------------+
+             """
+  end
 end
