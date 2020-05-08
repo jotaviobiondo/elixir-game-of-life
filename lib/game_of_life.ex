@@ -25,7 +25,7 @@ defmodule GameOfLife do
 
   @spec next_cell_generation(Grid.t(), {Grid.position(), Cell.t()}) :: {Grid.position(), Cell.t()}
   defp next_cell_generation(grid, {cell_position, cell_state}) do
-    case {cell_state, Grid.alive_neighbors(grid, cell_position)} do
+    case {cell_state, Grid.live_neighbors(grid, cell_position)} do
       {:alive, 2} -> {cell_position, :alive}
       {:alive, 3} -> {cell_position, :alive}
       {:dead, 3} -> {cell_position, :alive}

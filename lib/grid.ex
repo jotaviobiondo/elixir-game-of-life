@@ -87,8 +87,8 @@ defmodule GameOfLife.Grid do
   @spec inside_grid?(t, position) :: boolean
   defp inside_grid?(grid, {x, y}), do: x in 0..(grid.size - 1) and y in 0..(grid.size - 1)
 
-  @spec alive_neighbors(t, position) :: non_neg_integer
-  def alive_neighbors(grid, cell_position) do
+  @spec live_neighbors(t, position) :: non_neg_integer
+  def live_neighbors(grid, cell_position) do
     grid
     |> neighbors(cell_position)
     |> Enum.map(fn neighbor -> get_cell(grid, neighbor) end)

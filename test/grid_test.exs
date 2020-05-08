@@ -83,7 +83,7 @@ defmodule GameOfLife.GridTest do
     assert Grid.neighbors(grid, {2, 2}) == MapSet.new([{1, 1}, {1, 2}, {2, 1}])
   end
 
-  test "Grid.alive_neighbors/2" do
+  test "Grid.live_neighbors/2" do
     cell_matrix = [
       [0, 0, 0, 1],
       [0, 0, 1, 0],
@@ -93,22 +93,22 @@ defmodule GameOfLife.GridTest do
 
     grid = Grid.new(cell_matrix)
 
-    assert Grid.alive_neighbors(grid, {0, 0}) == 0
-    assert Grid.alive_neighbors(grid, {0, 1}) == 1
-    assert Grid.alive_neighbors(grid, {0, 2}) == 2
-    assert Grid.alive_neighbors(grid, {0, 3}) == 1
-    assert Grid.alive_neighbors(grid, {1, 0}) == 2
-    assert Grid.alive_neighbors(grid, {1, 1}) == 4
-    assert Grid.alive_neighbors(grid, {1, 2}) == 4
-    assert Grid.alive_neighbors(grid, {1, 3}) == 4
-    assert Grid.alive_neighbors(grid, {2, 0}) == 1
-    assert Grid.alive_neighbors(grid, {2, 1}) == 4
-    assert Grid.alive_neighbors(grid, {2, 2}) == 5
-    assert Grid.alive_neighbors(grid, {2, 3}) == 4
-    assert Grid.alive_neighbors(grid, {3, 0}) == 2
-    assert Grid.alive_neighbors(grid, {3, 1}) == 4
-    assert Grid.alive_neighbors(grid, {3, 2}) == 4
-    assert Grid.alive_neighbors(grid, {3, 3}) == 3
+    assert Grid.live_neighbors(grid, {0, 0}) == 0
+    assert Grid.live_neighbors(grid, {0, 1}) == 1
+    assert Grid.live_neighbors(grid, {0, 2}) == 2
+    assert Grid.live_neighbors(grid, {0, 3}) == 1
+    assert Grid.live_neighbors(grid, {1, 0}) == 2
+    assert Grid.live_neighbors(grid, {1, 1}) == 4
+    assert Grid.live_neighbors(grid, {1, 2}) == 4
+    assert Grid.live_neighbors(grid, {1, 3}) == 4
+    assert Grid.live_neighbors(grid, {2, 0}) == 1
+    assert Grid.live_neighbors(grid, {2, 1}) == 4
+    assert Grid.live_neighbors(grid, {2, 2}) == 5
+    assert Grid.live_neighbors(grid, {2, 3}) == 4
+    assert Grid.live_neighbors(grid, {3, 0}) == 2
+    assert Grid.live_neighbors(grid, {3, 1}) == 4
+    assert Grid.live_neighbors(grid, {3, 2}) == 4
+    assert Grid.live_neighbors(grid, {3, 3}) == 3
   end
 
   describe "Grid.get_cell/2" do
