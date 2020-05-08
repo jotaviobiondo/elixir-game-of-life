@@ -104,12 +104,12 @@ defmodule GameOfLife.Grid do
       |> Enum.map_join("|", fn position ->
         cell_str = get_cell(grid, position) |> Cell.to_string()
 
-        k = grid.size - 1
+        last_index = grid.size - 1
 
         case position do
           {0, 0} -> "|#{cell_str}"
-          {^k, ^k} -> "#{cell_str}|"
-          {_, ^k} -> "#{cell_str}|\n"
+          {^last_index, ^last_index} -> "#{cell_str}|"
+          {_, ^last_index} -> "#{cell_str}|\n"
           {_, _} -> cell_str
         end
       end)
