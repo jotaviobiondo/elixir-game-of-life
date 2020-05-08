@@ -16,15 +16,20 @@ defmodule GameOfLife do
   @spec next_generation(Grid.t()) :: Grid.t()
   defp next_generation(grid) do
     new_cells =
-      for {position, cell} <- grid.cells, into: %{} do
-        case {cell, Grid.alive_neighbors(grid, position)} do
-          {:alive, 2} -> {position, :alive}
-          {:alive, 3} -> {position, :alive}
-          {:dead, 3} -> {position, :alive}
-          _ -> {position, :dead}
-        end
+      for cell <- grid.cells, into: %{} do
+        next_cell_generation(grid, cell)
       end
 
     %Grid{cells: new_cells, size: grid.size}
+  end
+
+  @spec next_cell_generation(Grid.t(), {Grid.position(), Cell.t()}) :: {Grid.position(), Cell.t()}
+  defp next_cell_generation(grid, {cell_position, cell_state}) do
+    case {cell_state, Grid.alive_neighbors(grid, cell_position)} do
+      {:alive, 2} -> {cell_position, :alive}
+      {:alive, 3} -> {cell_position, :alive}
+      {:dead, 3} -> {cell_position, :alive}
+      _ -> {cell_position, :dead}
+    end
   end
 end
