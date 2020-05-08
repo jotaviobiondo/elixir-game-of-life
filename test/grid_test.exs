@@ -135,7 +135,7 @@ defmodule GameOfLife.GridTest do
     end
   end
 
-  test "Grid.to_string/1" do
+  test "to_string/1" do
     cell_matrix = [
       [0, 0, 0, 1],
       [0, 0, 1, 0],
@@ -145,7 +145,7 @@ defmodule GameOfLife.GridTest do
 
     grid = Grid.new(cell_matrix)
 
-    assert Grid.to_string(grid) ==
+    assert to_string(grid) ==
              """
              +---------------+
              |   |   |   | x |

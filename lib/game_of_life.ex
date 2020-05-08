@@ -6,7 +6,7 @@ defmodule GameOfLife do
     Grid.new_random(grid_size)
     |> Stream.iterate(&next_generation/1)
     |> Stream.take(generations)
-    |> Stream.map(&Grid.to_string/1)
+    |> Stream.map(&to_string/1)
     |> Enum.each(fn grid_str ->
       IO.puts(grid_str)
       Process.sleep(500)

@@ -17,7 +17,7 @@ defmodule GameOfLifeTest do
       assert Grid.new(cell_matrix)
              |> GameOfLife.next_generation()
              |> GameOfLife.next_generation()
-             |> Grid.to_string() ==
+             |> to_string() ==
                """
                +---------------+
                |   |   |   |   |
@@ -40,7 +40,7 @@ defmodule GameOfLifeTest do
 
       first_generation = Grid.new(cell_matrix) |> GameOfLife.next_generation()
 
-      assert first_generation |> Grid.to_string() ==
+      assert first_generation |> to_string() ==
                """
                +-------------------+
                |   |   |   |   |   |
@@ -51,7 +51,7 @@ defmodule GameOfLifeTest do
                +-------------------+
                """
 
-      assert first_generation |> GameOfLife.next_generation() |> Grid.to_string() ==
+      assert first_generation |> GameOfLife.next_generation() |> to_string() ==
                """
                +-------------------+
                |   |   |   |   |   |
@@ -76,7 +76,7 @@ defmodule GameOfLifeTest do
 
       first_generation = Grid.new(cell_matrix) |> GameOfLife.next_generation()
 
-      assert first_generation |> Grid.to_string() ==
+      assert first_generation |> to_string() ==
                """
                +-----------------------+
                |   |   |   |   |   |   |
@@ -90,7 +90,7 @@ defmodule GameOfLifeTest do
 
       second_generation = GameOfLife.next_generation(first_generation)
 
-      assert second_generation |> Grid.to_string() ==
+      assert second_generation |> to_string() ==
                """
                +-----------------------+
                |   |   |   |   |   |   |
@@ -104,7 +104,7 @@ defmodule GameOfLifeTest do
 
       third_generation = GameOfLife.next_generation(second_generation)
 
-      assert third_generation |> Grid.to_string() ==
+      assert third_generation |> to_string() ==
                """
                +-----------------------+
                |   |   |   |   |   |   |
@@ -118,7 +118,7 @@ defmodule GameOfLifeTest do
 
       fourth_generation = GameOfLife.next_generation(third_generation)
 
-      assert fourth_generation |> Grid.to_string() ==
+      assert fourth_generation |> to_string() ==
                """
                +-----------------------+
                |   |   |   |   |   |   |
