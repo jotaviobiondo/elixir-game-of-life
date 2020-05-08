@@ -13,4 +13,8 @@ defmodule GameOfLife.Cell do
   @spec from_int(integer) :: t
   def from_int(0), do: :dead
   def from_int(x) when is_integer(x), do: :alive
+
+  @spec to_int(t) :: integer
+  def to_int(:dead), do: 0
+  def to_int(:alive), do: 1
 end

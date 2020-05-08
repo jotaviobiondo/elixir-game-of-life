@@ -57,7 +57,7 @@ defmodule GameOfLife.Grid do
 
   @spec new_empty(size) :: t
   def new_empty(size) do
-    :dead
+    0
     |> List.duplicate(size)
     |> List.duplicate(size)
     |> new()
@@ -68,6 +68,7 @@ defmodule GameOfLife.Grid do
     (&Cell.random/0)
     |> Stream.repeatedly()
     |> Stream.take(size * size)
+    |> Stream.map(&Cell.to_int/1)
     |> Enum.chunk_every(size)
     |> new()
   end
