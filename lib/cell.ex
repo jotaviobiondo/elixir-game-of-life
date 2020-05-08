@@ -7,8 +7,8 @@ defmodule GameOfLife.Cell do
   def random, do: Enum.random([:alive, :dead])
 
   @spec to_string(t) :: String.t()
-  def to_string(:alive), do: " x "
-  def to_string(:dead), do: "   "
+  def to_string(:alive), do: "x"
+  def to_string(:dead), do: " "
 
   @spec from_int(integer) :: t
   def from_int(0), do: :dead

@@ -110,10 +110,10 @@ defmodule GameOfLife.Grid do
         last_index = grid.size - 1
 
         case position do
-          {0, 0} -> "|#{cell_str}"
-          {^last_index, ^last_index} -> "#{cell_str}|"
-          {_, ^last_index} -> "#{cell_str}|\n"
-          {_, _} -> cell_str
+          {0, 0} -> "| #{cell_str} "
+          {^last_index, ^last_index} -> " #{cell_str} |"
+          {_, ^last_index} -> " #{cell_str} |\n"
+          {_, _} -> " #{cell_str} "
         end
       end)
 

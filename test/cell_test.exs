@@ -15,11 +15,11 @@ defmodule GameOfLife.CellTest do
 
   describe "Cell.to_string/1" do
     test "when dead" do
-      assert Cell.to_string(:dead) == "   "
+      assert Cell.to_string(:dead) == " "
     end
 
     test "when alive" do
-      assert Cell.to_string(:alive) == " x "
+      assert Cell.to_string(:alive) == "x"
     end
 
     test "both representations must have the same length" do
