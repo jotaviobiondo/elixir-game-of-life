@@ -4,6 +4,29 @@ defmodule GameOfLifeTest do
 
   doctest GameOfLife
 
+  test "get_stream/1" do
+    cell_matrix = [
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0]
+    ]
+
+    stream = GameOfLife.get_stream(cell_matrix)
+
+    assert stream |> Enum.take(10) |> Enum.count() == 10
+    assert stream |> Enum.take(100) |> Enum.count() == 100
+    assert stream |> Enum.take(1000) |> Enum.count() == 1000
+  end
+
+  test "get_random_stream/1" do
+    stream = GameOfLife.get_random_stream()
+
+    assert stream |> Enum.take(10) |> Enum.count() == 10
+    assert stream |> Enum.take(100) |> Enum.count() == 100
+    assert stream |> Enum.take(1000) |> Enum.count() == 1000
+  end
+
   describe "next_generation/1" do
     # https://en.wikipedia.org/wiki/Still_life_(cellular_automaton)
     test "still life - block" do
