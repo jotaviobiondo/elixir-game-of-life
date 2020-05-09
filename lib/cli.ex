@@ -1,16 +1,19 @@
 defmodule GameOfLife.CLI do
-  @generations_default 5
-  @grid_size_default 10
+  @moduledoc """
+  Module that provides the Command Line Interface to run the game of life on terminal.
+  """
 
   @default_options %{
-    generations: @generations_default,
-    grid_size: @grid_size_default
+    generations: 5,
+    grid_size: 10
   }
 
+  @spec main([String.t()]) :: :no_return
   def main(args) do
     args |> parse_args() |> start_game_of_life()
   end
 
+  @spec parse_args([String.t()]) :: %{generations: pos_integer, grid_size: pos_integer}
   def parse_args(args) do
     {options, _, _} =
       OptionParser.parse(args,
@@ -23,9 +26,5 @@ defmodule GameOfLife.CLI do
 
   defp start_game_of_life(%{generations: generations, grid_size: grid_size}) do
     GameOfLife.start(generations, grid_size)
-  end
-
-  defp start_game_of_life(_) do
-    IO.puts("Invalid input")
   end
 end

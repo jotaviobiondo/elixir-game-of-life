@@ -1,5 +1,7 @@
 defmodule GameOfLife.Grid do
-  @moduledoc false
+  @moduledoc """
+  Module that provides functions to create and retrieve information from the grid of the game of life.
+  """
 
   alias GameOfLife.Grid
   alias GameOfLife.Cell
@@ -57,8 +59,7 @@ defmodule GameOfLife.Grid do
 
   @spec new_empty(size) :: t
   def new_empty(size) do
-    0
-    |> List.duplicate(size)
+    List.duplicate(0, size)
     |> List.duplicate(size)
     |> new()
   end

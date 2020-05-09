@@ -1,4 +1,8 @@
 defmodule GameOfLife do
+  @moduledoc """
+  Module that provides functions to start the game of life and generate the next generations.
+  """
+
   alias GameOfLife.Grid
 
   @spec start(pos_integer, pos_integer) :: no_return

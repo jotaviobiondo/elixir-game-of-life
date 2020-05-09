@@ -1,5 +1,7 @@
 defmodule GameOfLife.Cell do
-  @moduledoc false
+  @moduledoc """
+  Module that provides functions to manipulate cell state (alive or dead).
+  """
 
   @type t :: :alive | :dead
 
