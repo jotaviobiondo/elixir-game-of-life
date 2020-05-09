@@ -5,16 +5,14 @@ defmodule GameOfLife do
 
   alias GameOfLife.Grid
 
-  @spec start(pos_integer, pos_integer) :: no_return
-  def start(generations \\ 5, grid_size \\ 10) do
-    Grid.new_random(grid_size)
-    |> Stream.iterate(&next_generation/1)
-    |> Stream.take(generations)
-    |> Stream.map(&to_string/1)
-    |> Enum.each(fn grid_str ->
-      IO.puts(grid_str)
-      Process.sleep(500)
-    end)
+  @spec get_stream(Grid.cell_matrix()) :: Enumerable.t()
+  def get_stream(cell_matrix) do
+    Grid.new(cell_matrix) |> Stream.iterate(&next_generation/1)
+  end
+
+  @spec get_random_stream(pos_integer) :: Enumerable.t()
+  def get_random_stream(grid_size \\ 10) do
+    Grid.new_random(grid_size) |> Stream.iterate(&next_generation/1)
   end
 
   @spec next_generation(Grid.t()) :: Grid.t()

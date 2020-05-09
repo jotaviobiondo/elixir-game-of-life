@@ -8,7 +8,7 @@ defmodule GameOfLife.CLI do
     grid_size: 10
   }
 
-  @spec main([String.t()]) :: :no_return
+  @spec main([String.t()]) :: no_return
   def main(args) do
     args |> parse_args() |> start_game_of_life()
   end
@@ -25,6 +25,12 @@ defmodule GameOfLife.CLI do
   end
 
   defp start_game_of_life(%{generations: generations, grid_size: grid_size}) do
-    GameOfLife.start(generations, grid_size)
+    GameOfLife.get_random_stream(grid_size)
+    |> Stream.take(generations)
+    |> Stream.map(&to_string/1)
+    |> Enum.each(fn grid_str ->
+      IO.puts(grid_str)
+      Process.sleep(500)
+    end)
   end
 end
