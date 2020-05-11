@@ -16,8 +16,8 @@ defmodule GameOfLife.Grid do
           size: size
         }
 
-  @enforce_keys [:cells]
-  defstruct [:cells, size: 10]
+  @enforce_keys [:cells, :size]
+  defstruct [:cells, :size]
 
   @spec new(cell_matrix) :: t
   def new(cell_matrix) do
