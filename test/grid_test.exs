@@ -1,9 +1,8 @@
 defmodule GameOfLife.GridTest do
   use ExUnit.Case
   alias GameOfLife.Grid
-  doctest GameOfLife.Grid
 
-  describe "Grid.new/1" do
+  describe "new/1" do
     test "valid cell matrix" do
       cell_matrix = [
         [1, 1],
@@ -38,7 +37,7 @@ defmodule GameOfLife.GridTest do
     end
   end
 
-  test "Grid.new_empty/1" do
+  test "new_empty/1" do
     size = 20
     grid = Grid.new_empty(size)
 
@@ -50,7 +49,7 @@ defmodule GameOfLife.GridTest do
            |> Enum.all?(&(&1 == :dead))
   end
 
-  test "Grid.new_random/1" do
+  test "new_random/1" do
     size = 20
     grid = Grid.new_random(size)
 
@@ -62,7 +61,7 @@ defmodule GameOfLife.GridTest do
            |> Enum.all?(&(&1 in [:alive, :dead]))
   end
 
-  test "Grid.neighbors/2" do
+  test "neighbors/2" do
     grid = Grid.new_empty(3)
 
     #   [(0, 0) (0, 1) (0, 2)]
@@ -83,7 +82,7 @@ defmodule GameOfLife.GridTest do
     assert Grid.neighbors(grid, {2, 2}) == MapSet.new([{1, 1}, {1, 2}, {2, 1}])
   end
 
-  test "Grid.live_neighbors/2" do
+  test "live_neighbors/2" do
     cell_matrix = [
       [0, 0, 0, 1],
       [0, 0, 1, 0],
@@ -111,7 +110,7 @@ defmodule GameOfLife.GridTest do
     assert Grid.live_neighbors(grid, {3, 3}) == 3
   end
 
-  describe "Grid.get_cell/2" do
+  describe "get_cell/2" do
     setup do
       cell_matrix = [
         [0, 1],

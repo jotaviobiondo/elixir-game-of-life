@@ -2,8 +2,6 @@ defmodule GameOfLifeTest do
   use ExUnit.Case
   alias GameOfLife.Grid
 
-  doctest GameOfLife
-
   test "get_stream/1" do
     cell_matrix = [
       [0, 0, 0, 0],

@@ -1,9 +1,8 @@
 defmodule GameOfLife.CellTest do
   use ExUnit.Case
   alias GameOfLife.Cell
-  doctest GameOfLife.Cell
 
-  test "Cell.random/0 only contains :dead or :alive values" do
+  test "random/0 only contains :dead or :alive values" do
     only_alive_or_dead =
       (&Cell.random/0)
       |> Stream.repeatedly()
@@ -13,7 +12,7 @@ defmodule GameOfLife.CellTest do
     assert only_alive_or_dead
   end
 
-  describe "Cell.to_string/1" do
+  describe "to_string/1" do
     test "when dead" do
       assert Cell.to_string(:dead) == " "
     end
