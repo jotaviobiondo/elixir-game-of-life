@@ -5,11 +5,19 @@ defmodule GameOfLife do
 
   alias GameOfLife.Grid
 
+  @doc """
+  Returns a infinite enumerable where each element is the next generation of the previous one.
+  The first generation starts with the provided 'cell_matrix' argument.
+  """
   @spec get_stream(Grid.cell_matrix()) :: Enumerable.t()
   def get_stream(cell_matrix) do
     Grid.new(cell_matrix) |> Stream.iterate(&next_generation/1)
   end
 
+  @doc """
+  Returns a infinite enumerable where each element is the next generation of the previous one.
+  The first generation is a random grid with the size provided by the argument 'grid_size'.
+  """
   @spec get_random_stream(pos_integer) :: Enumerable.t()
   def get_random_stream(grid_size \\ 10) do
     Grid.new_random(grid_size) |> Stream.iterate(&next_generation/1)
