@@ -1,0 +1,25 @@
+<section class="d-flex flex-column align-items-center" style="width: 100%">
+  <div style="white-space: pre;font-family: monospace;">
+    <%= raw grid_to_html(@grid) %>
+  </div>
+
+  <div>
+    <button
+      type="button"
+      phx-click="start"
+      phx-disable-with="Starting..."
+      <%= if @state == :running, do: "disabled"%>
+    >
+        Start
+    </button>
+
+    <button
+      type="button"
+      phx-click="stop"
+      phx-disable-with="Stopping..."
+      <%= if @state == :stopped, do: "disabled"%>
+    >
+        Stop
+    </button>
+  </div>
+</section>
