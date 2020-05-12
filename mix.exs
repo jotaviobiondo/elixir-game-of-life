@@ -9,7 +9,7 @@ defmodule GameOfLife.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
-      escript: [main_module: GameOfLife.CLI],
+      escript: [main_module: GameOfLifeCLI.CLI],
       aliases: aliases(),
       deps: deps()
     ]

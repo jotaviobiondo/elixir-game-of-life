@@ -26,7 +26,7 @@ mix test
 
 To run the CLI, execute the following script:
 ```
-./run.sh
+./run-cli.sh
 ```
 
 The CLI accepts the following optional arguments:

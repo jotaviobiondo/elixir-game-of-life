@@ -1,4 +1,4 @@
-defmodule GameOfLife.CLI do
+defmodule GameOfLifeCLI.CLI do
   @moduledoc """
   Module that provides the Command Line Interface to run the game of life on terminal.
   """

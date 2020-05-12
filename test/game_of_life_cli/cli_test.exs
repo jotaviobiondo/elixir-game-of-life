@@ -1,6 +1,6 @@
-defmodule GameOfLife.CLITest do
+defmodule GameOfLifeCLI.CLITest do
   use ExUnit.Case
-  alias GameOfLife.CLI
+  alias GameOfLifeCLI.CLI
 
   describe "parse_args/1" do
     test "with all args" do
