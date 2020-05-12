@@ -1,6 +1,7 @@
-defmodule GameOfLifeTest do
+defmodule GameOfLife.LifeTest do
   use ExUnit.Case
   alias GameOfLife.Grid
+  alias GameOfLife.Life
 
   test "get_stream/1" do
     cell_matrix = [
@@ -10,7 +11,7 @@ defmodule GameOfLifeTest do
       [0, 0, 0, 0]
     ]
 
-    stream = GameOfLife.get_stream(cell_matrix)
+    stream = Life.get_stream(cell_matrix)
 
     assert stream |> Enum.take(10) |> Enum.count() == 10
     assert stream |> Enum.take(100) |> Enum.count() == 100
@@ -18,7 +19,7 @@ defmodule GameOfLifeTest do
   end
 
   test "get_random_stream/1" do
-    stream = GameOfLife.get_random_stream()
+    stream = Life.get_random_stream()
 
     assert stream |> Enum.take(10) |> Enum.count() == 10
     assert stream |> Enum.take(100) |> Enum.count() == 100
@@ -36,8 +37,8 @@ defmodule GameOfLifeTest do
       ]
 
       assert Grid.new(cell_matrix)
-             |> GameOfLife.next_generation()
-             |> GameOfLife.next_generation()
+             |> Life.next_generation()
+             |> Life.next_generation()
              |> to_string() ==
                """
                +---------------+
@@ -59,7 +60,7 @@ defmodule GameOfLifeTest do
         [0, 0, 0, 0, 0]
       ]
 
-      first_generation = Grid.new(cell_matrix) |> GameOfLife.next_generation()
+      first_generation = Grid.new(cell_matrix) |> Life.next_generation()
 
       assert first_generation |> to_string() ==
                """
@@ -72,7 +73,7 @@ defmodule GameOfLifeTest do
                +-------------------+
                """
 
-      assert first_generation |> GameOfLife.next_generation() |> to_string() ==
+      assert first_generation |> Life.next_generation() |> to_string() ==
                """
                +-------------------+
                |   |   |   |   |   |
@@ -95,7 +96,7 @@ defmodule GameOfLifeTest do
         [0, 0, 0, 0, 0, 0]
       ]
 
-      first_generation = Grid.new(cell_matrix) |> GameOfLife.next_generation()
+      first_generation = Grid.new(cell_matrix) |> Life.next_generation()
 
       assert first_generation |> to_string() ==
                """
@@ -109,7 +110,7 @@ defmodule GameOfLifeTest do
                +-----------------------+
                """
 
-      second_generation = GameOfLife.next_generation(first_generation)
+      second_generation = Life.next_generation(first_generation)
 
       assert second_generation |> to_string() ==
                """
@@ -123,7 +124,7 @@ defmodule GameOfLifeTest do
                +-----------------------+
                """
 
-      third_generation = GameOfLife.next_generation(second_generation)
+      third_generation = Life.next_generation(second_generation)
 
       assert third_generation |> to_string() ==
                """
@@ -137,7 +138,7 @@ defmodule GameOfLifeTest do
                +-----------------------+
                """
 
-      fourth_generation = GameOfLife.next_generation(third_generation)
+      fourth_generation = Life.next_generation(third_generation)
 
       assert fourth_generation |> to_string() ==
                """

@@ -3,8 +3,8 @@ defmodule GameOfLife.Grid do
   Module that provides functions to create and retrieve information from the grid of the game of life.
   """
 
-  alias GameOfLife.Grid
   alias GameOfLife.Cell
+  alias GameOfLife.Grid
 
   @type position :: {integer, integer}
   @type cells :: %{required(position) => Cell.t()}

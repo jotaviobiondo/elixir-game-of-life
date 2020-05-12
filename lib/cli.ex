@@ -2,6 +2,7 @@ defmodule GameOfLife.CLI do
   @moduledoc """
   Module that provides the Command Line Interface to run the game of life on terminal.
   """
+  alias GameOfLife.Life
 
   @default_options %{
     generations: 5,
@@ -25,7 +26,7 @@ defmodule GameOfLife.CLI do
   end
 
   defp start_game_of_life(%{generations: generations, grid_size: grid_size}) do
-    GameOfLife.get_random_stream(grid_size)
+    Life.get_random_stream(grid_size)
     |> Stream.take(generations)
     |> Stream.map(&to_string/1)
     |> Enum.each(fn grid_str ->

@@ -1,4 +1,4 @@
-defmodule GameOfLife do
+defmodule GameOfLife.Life do
   @moduledoc """
   Module that provides functions to start the game of life and generate the next generations.
   """
