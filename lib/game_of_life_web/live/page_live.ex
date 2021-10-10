@@ -11,11 +11,13 @@ defmodule GameOfLifeWeb.PageLive do
     grid = Grid.new_random(@grid_size)
 
     socket =
-      assign(
-        socket,
+      socket
+      |> assign(
         tref: nil,
         state: :stopped,
-        grid: grid
+        grid: grid,
+        size: grid.size,
+        json: Jason.encode!(Grid.to_matrix(grid))
       )
 
     {:ok, socket}
@@ -23,9 +25,18 @@ defmodule GameOfLifeWeb.PageLive do
 
   @impl true
   def handle_event("start", _params, socket) do
-    {:ok, tref} = :timer.send_interval(1000, self(), :update)
+    %{state: state} = socket.assigns
 
-    socket = assign(socket, state: :running, tref: tref)
+    socket =
+      case state do
+        :stopped ->
+          {:ok, tref} = :timer.send_interval(1000, self(), :update)
+
+          assign(socket, state: :running, tref: tref)
+
+        _ ->
+          socket
+      end
 
     {:noreply, socket}
   end
@@ -45,7 +56,9 @@ defmodule GameOfLifeWeb.PageLive do
 
     next_generation = Life.next_generation(grid)
 
-    {:noreply, assign(socket, grid: next_generation)}
+    json = next_generation |> Grid.to_matrix() |> Jason.encode!()
+
+    {:noreply, assign(socket, grid: next_generation, json: json)}
   end
 
   def grid_to_html(grid) do

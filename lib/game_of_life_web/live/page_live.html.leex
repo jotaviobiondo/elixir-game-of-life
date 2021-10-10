@@ -1,4 +1,18 @@
 <section class="d-flex flex-column align-items-center" style="width: 100%">
+  --------------------------------------
+
+  <%# <canvas id="myCanvas" phx-hook="Canvas" phx-value-myvar1="val1" width="200" height="100"></canvas> %>
+  <div
+    phx-hook="canvas"
+    data-grid="<%= @json %>"
+    data-size="<%= @size %>"
+  >
+    <canvas phx-update="ignore" width="500" height="500">
+      Canvas is not supported!
+    </canvas>
+  </div>
+
+  --------------------------------------
   <div style="white-space: pre;font-family: monospace;">
     <%= raw grid_to_html(@grid) %>
   </div>

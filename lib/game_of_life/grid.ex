@@ -57,6 +57,14 @@ defmodule GameOfLife.Grid do
     end
   end
 
+  def to_matrix(%Grid{cells: cells, size: size} = _grid) do
+    for x <- 0..(size - 1),
+        y <- 0..(size - 1) do
+      cells[{x, y}] |> Cell.to_int()
+    end
+    |> Enum.chunk_every(size)
+  end
+
   @spec new_empty(size) :: t
   def new_empty(size) do
     List.duplicate(0, size)
@@ -79,6 +87,7 @@ defmodule GameOfLife.Grid do
     for offset_x <- [-1, 0, 1],
         offset_y <- [-1, 0, 1],
         neighbor = {offset_x + cell_x, offset_y + cell_y},
+        # TODO: change for neighbor != position
         inside_grid?(grid, neighbor) and {offset_x, offset_y} != {0, 0},
         into: MapSet.new() do
       neighbor
