@@ -26,7 +26,7 @@ defmodule GameOfLifeWeb.HomeLive do
     ~H"""
     <section class="d-flex flex-column align-items-center" style="width: 100%">
       <div style="white-space: pre;font-family: monospace;">
-        <%= raw grid_to_html(@grid) %>
+        <%= raw(grid_to_html(@grid)) %>
       </div>
 
       <div>
@@ -37,7 +37,7 @@ defmodule GameOfLifeWeb.HomeLive do
           disabled={@state == :running}
           class="disabled:opacity-50 disabled:pointer-events-none"
         >
-            Start
+          Start
         </.button>
 
         <.button
@@ -47,7 +47,7 @@ defmodule GameOfLifeWeb.HomeLive do
           disabled={@state == :stopped}
           class="disabled:opacity-50 disabled:pointer-events-none"
         >
-            Stop
+          Stop
         </.button>
       </div>
     </section>
