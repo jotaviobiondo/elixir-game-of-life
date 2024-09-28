@@ -7,7 +7,7 @@ A [Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) implemen
 ## Usage
 
 ### Requirements
-- [Elixir 1.10](https://elixir-lang.org/install.html)
+- [Elixir 1.17](https://elixir-lang.org/install.html)
 
 Install the dependencies:
 ```
@@ -35,4 +35,3 @@ The CLI accepts the following optional arguments:
 
 ## TODO
 - [ ] Web interface with phoenix LiveView.
-

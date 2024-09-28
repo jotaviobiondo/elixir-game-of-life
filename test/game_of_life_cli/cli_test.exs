@@ -1,5 +1,6 @@
 defmodule GameOfLifeCLI.CLITest do
   use ExUnit.Case
+  alias Credo.Check.Design.TagTODO
   alias GameOfLifeCLI.CLI
 
   describe "parse_args/1" do
@@ -12,14 +13,15 @@ defmodule GameOfLifeCLI.CLITest do
     test "with no args must have default values" do
       options = CLI.parse_args([])
 
-      assert Map.keys(options) == [:generations, :grid_size]
+      assert %{generations: 5, grid_size: 10} == options
     end
 
     test "with 1 argument and others must have default values" do
       options = CLI.parse_args(["--generations", "50"])
 
-      assert Map.keys(options) == [:generations, :grid_size]
-      assert %{generations: 50} = options
+      assert %{generations: 50, grid_size: 10} == options
     end
+
+    # test when wrong parameters are given
   end
 end
