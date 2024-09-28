@@ -1,6 +1,5 @@
 defmodule GameOfLifeCLI.CLITest do
   use ExUnit.Case
-  alias Credo.Check.Design.TagTODO
   alias GameOfLifeCLI.CLI
 
   describe "parse_args/1" do
@@ -22,6 +21,6 @@ defmodule GameOfLifeCLI.CLITest do
       assert %{generations: 50, grid_size: 10} == options
     end
 
-    # test when wrong parameters are given
+    # TODO: test when wrong parameters are given
   end
 end
