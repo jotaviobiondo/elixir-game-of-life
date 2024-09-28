@@ -26,19 +26,12 @@ defmodule GameOfLifeCLI.CLI do
   end
 
   defp start_game_of_life(%{generations: generations, grid_size: grid_size}) do
-    # IO.puts(IO.ANSI.blue_background())
-
     Life.get_random_stream(grid_size)
     |> Stream.take(generations)
     |> Stream.map(&to_string/1)
     |> Enum.each(fn grid_str ->
       IO.write(grid_str)
       Process.sleep(100)
-
-      for _i <- 1..grid_size + 2, do: IO.write(IO.ANSI.cursor_up(1) <> IO.ANSI.clear_line())
-      # IO.write(IO.ANSI.cursor_down(grid_size))
     end)
-
-    IO.puts(IO.ANSI.reset())
   end
 end
