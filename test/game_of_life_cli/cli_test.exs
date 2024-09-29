@@ -21,6 +21,10 @@ defmodule GameOfLifeCLI.CLITest do
       assert %{generations: 50, grid_size: 10} == options
     end
 
-    # TODO: test when wrong parameters are given
+    test "should ignore wrong arguments" do
+      options = CLI.parse_args(["--wrong", "value"])
+
+      assert %{generations: 5, grid_size: 10} == options
+    end
   end
 end
