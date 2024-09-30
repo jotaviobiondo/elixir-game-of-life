@@ -4,6 +4,7 @@ defmodule GameOfLife.Life do
   """
 
   alias GameOfLife.Grid
+  alias GameOfLife.Cell
 
   @doc """
   Returns a infinite enumerable where each element is the next generation of the previous one.
@@ -11,23 +12,27 @@ defmodule GameOfLife.Life do
   """
   @spec get_stream(Grid.cell_matrix()) :: Enumerable.t()
   def get_stream(cell_matrix) do
-    Grid.new(cell_matrix) |> Stream.iterate(&next_generation/1)
+    cell_matrix
+    |> Grid.new()
+    |> Stream.iterate(&next_generation/1)
   end
 
   @doc """
   Returns a infinite enumerable where each element is the next generation of the previous one.
-  The first generation is a random grid with the size provided by the argument 'grid_size'.
+  The first generation is a random grid with the size provided by the arguments 'rows' and `columns`.
   """
-  @spec get_random_stream(pos_integer) :: Enumerable.t()
-  def get_random_stream(grid_size \\ 10) do
-    Grid.new_random(grid_size) |> Stream.iterate(&next_generation/1)
+  @spec get_random_stream(rows :: pos_integer(), columns :: pos_integer()) :: Enumerable.t()
+  def get_random_stream(rows, columns) do
+    rows
+    |> Grid.new_random(columns)
+    |> Stream.iterate(&next_generation/1)
   end
 
   @spec next_generation(Grid.t()) :: Grid.t()
-  def next_generation(grid) do
+  def next_generation(%Grid{} = grid) do
     new_cells = Map.new(grid.cells, fn cell -> next_cell_generation(grid, cell) end)
 
-    %Grid{cells: new_cells, size: grid.size}
+    %Grid{grid | cells: new_cells}
   end
 
   @spec next_cell_generation(Grid.t(), {Grid.position(), Cell.t()}) :: {Grid.position(), Cell.t()}

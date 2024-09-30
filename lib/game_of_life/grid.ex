@@ -13,20 +13,23 @@ defmodule GameOfLife.Grid do
 
   @type t :: %__MODULE__{
           cells: cells,
-          size: size
+          rows: pos_integer(),
+          cols: pos_integer()
         }
 
-  @enforce_keys [:cells, :size]
-  defstruct [:cells, :size]
+  @enforce_keys [:cells, :rows, :cols]
+  defstruct [:cells, :rows, :cols]
 
   @spec new(cell_matrix) :: t
   def new(cell_matrix) do
     with {:ok, cell_matrix} <- validate_not_empty(cell_matrix),
-         {:ok, cell_matrix} <- validate_matrix_is_square(cell_matrix) do
-      size = Enum.count(cell_matrix)
-      cells = matrix_to_cells(cell_matrix, size)
+         {:ok, cell_matrix} <- validate_matrix_dimension(cell_matrix) do
+      rows = Enum.count(cell_matrix)
+      cols = cell_matrix |> List.first() |> Enum.count()
 
-      %Grid{cells: cells, size: size}
+      cells = matrix_to_cells(cell_matrix, rows, cols)
+
+      %Grid{cells: cells, rows: rows, cols: cols}
     else
       {:error, reason} -> raise(ArgumentError, reason)
     end
@@ -37,19 +40,20 @@ defmodule GameOfLife.Grid do
   defp validate_not_empty([[]]), do: {:error, "matrix can not be empty"}
   defp validate_not_empty(matrix), do: {:ok, matrix}
 
-  @spec validate_matrix_is_square(cell_matrix) :: {:ok, cell_matrix} | {:error, String.t()}
-  defp validate_matrix_is_square(matrix) do
-    columns_count = Enum.count(matrix)
+  @spec validate_matrix_dimension(cell_matrix) :: {:ok, cell_matrix} | {:error, String.t()}
+  defp validate_matrix_dimension(matrix) do
+    first_row_count = matrix |> List.first() |> Enum.count()
+    all_rows_has_same_size? = Enum.all?(matrix, fn row -> Enum.count(row) == first_row_count end)
 
-    all_rows_has_same_size = Enum.all?(matrix, fn row -> Enum.count(row) == columns_count end)
-
-    if all_rows_has_same_size, do: {:ok, matrix}, else: {:error, "matrix is not square"}
+    if all_rows_has_same_size?,
+      do: {:ok, matrix},
+      else: {:error, "matrix doesn't have rows with equal number of elements"}
   end
 
-  @spec matrix_to_cells(cell_matrix, size) :: cells
-  defp matrix_to_cells(cell_matrix, size) do
-    for x <- 0..(size - 1),
-        y <- 0..(size - 1),
+  @spec matrix_to_cells(cell_matrix(), rows :: pos_integer(), cols :: pos_integer()) :: cells()
+  defp matrix_to_cells(cell_matrix, rows, cols) do
+    for x <- 0..(rows - 1),
+        y <- 0..(cols - 1),
         into: %{} do
       cell = cell_matrix |> Enum.at(x) |> Enum.at(y) |> Cell.from_int()
 
@@ -57,20 +61,13 @@ defmodule GameOfLife.Grid do
     end
   end
 
-  @spec new_empty(size) :: t
-  def new_empty(size) do
-    List.duplicate(0, size)
-    |> List.duplicate(size)
-    |> new()
-  end
-
-  @spec new_random(size) :: t
-  def new_random(size) do
+  @spec new_random(rows :: pos_integer(), cols :: pos_integer()) :: t
+  def new_random(rows, cols) do
     (&Cell.random/0)
     |> Stream.repeatedly()
-    |> Stream.take(size * size)
+    |> Stream.take(rows * cols)
     |> Stream.map(&Cell.to_int/1)
-    |> Enum.chunk_every(size)
+    |> Enum.chunk_every(cols)
     |> new()
   end
 
@@ -86,7 +83,7 @@ defmodule GameOfLife.Grid do
   end
 
   @spec inside_grid?(t, position) :: boolean
-  defp inside_grid?(grid, {x, y}), do: x in 0..(grid.size - 1) and y in 0..(grid.size - 1)
+  defp inside_grid?(grid, {x, y}), do: x in 0..(grid.rows - 1) and y in 0..(grid.cols - 1)
 
   @spec live_neighbors(t, position) :: non_neg_integer
   def live_neighbors(grid, cell_position) do
@@ -109,12 +106,13 @@ defmodule GameOfLife.Grid do
         |> Enum.map_join("|", fn position ->
           cell_str = Grid.get_cell(grid, position) |> Cell.to_string()
 
-          last_index = grid.size - 1
+          last_row_index = grid.rows - 1
+          last_col_index = grid.cols - 1
 
           case position do
             {0, 0} -> "| #{cell_str} "
-            {^last_index, ^last_index} -> " #{cell_str} |"
-            {_, ^last_index} -> " #{cell_str} |\n"
+            {^last_row_index, ^last_col_index} -> " #{cell_str} |"
+            {_, ^last_col_index} -> " #{cell_str} |\n"
             {_, _} -> " #{cell_str} "
           end
         end)

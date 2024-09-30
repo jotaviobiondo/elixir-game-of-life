@@ -4,65 +4,82 @@ defmodule GameOfLife.GridTest do
 
   describe "new/1" do
     test "valid cell matrix" do
-      cell_matrix = [
+      assert %Grid{
+        rows: 2,
+        cols: 2,
+        cells: %{
+                 {0, 0} => :alive,
+                 {0, 1} => :alive,
+                 {1, 0} => :dead,
+                 {1, 1} => :dead
+               }
+      } = Grid.new([
         [1, 1],
         [0, 0]
-      ]
+      ])
 
-      grid = Grid.new(cell_matrix)
+      assert %Grid{
+        rows: 2,
+        cols: 3,
+        cells: %{
+                 {0, 0} => :alive,
+                 {0, 1} => :alive,
+                 {0, 2} => :dead,
+                 {1, 0} => :dead,
+                 {1, 1} => :dead,
+                 {1, 2} => :alive
+               }
+      } = Grid.new([
+        [1, 1, 0],
+        [0, 0, 1]
+      ])
 
-      assert grid.size == Enum.count(cell_matrix)
-
-      assert grid.cells == %{
-               {0, 0} => :alive,
-               {0, 1} => :alive,
-               {1, 0} => :dead,
-               {1, 1} => :dead
-             }
+      assert %Grid{
+        rows: 3,
+        cols: 2,
+        cells: %{
+                 {0, 0} => :alive,
+                 {0, 1} => :alive,
+                 {1, 0} => :dead,
+                 {1, 1} => :dead,
+                 {2, 0} => :alive,
+                 {2, 1} => :dead
+               }
+      } = Grid.new([
+        [1, 1],
+        [0, 0],
+        [1, 0]
+      ])
     end
 
     test "empty cell matrix" do
-      assert_raise(ArgumentError, fn -> Grid.new([]) end)
-      assert_raise(ArgumentError, fn -> Grid.new([[]]) end)
+      assert_raise(ArgumentError, "matrix can not be empty", fn -> Grid.new([]) end)
+      assert_raise(ArgumentError, "matrix can not be empty", fn -> Grid.new([[]]) end)
     end
 
-    test "wrong size for cell matrix (not a square matrix)" do
+    test "should raise when rows don't have the same size" do
       cell_matrix = [
-        [0, 0],
-        [0, 0],
+        [0, 0, 0],
         [0, 0]
       ]
 
-      assert_raise(ArgumentError, fn -> Grid.new(cell_matrix) end)
+      assert_raise(ArgumentError, "matrix doesn't have rows with equal number of elements", fn -> Grid.new(cell_matrix) end)
     end
   end
 
-  test "new_empty/1" do
-    size = 20
-    grid = Grid.new_empty(size)
-
-    assert grid.size == size
-    assert Enum.count(grid.cells) == size * size
-
-    assert grid.cells
-           |> Map.values()
-           |> Enum.all?(&(&1 == :dead))
-  end
-
   test "new_random/1" do
-    size = 20
-    grid = Grid.new_random(size)
+    grid = Grid.new_random(3, 2)
 
-    assert grid.size == size
-    assert Enum.count(grid.cells) == size * size
-
+    assert 3 == grid.rows
+    assert 2 == grid.cols
+    assert 6 == Enum.count(grid.cells)
     assert grid.cells
            |> Map.values()
            |> Enum.all?(&(&1 in [:alive, :dead]))
   end
 
   test "neighbors/2" do
-    grid = Grid.new_empty(3)
+    grid = Grid.new_random(3, 3)
 
     #   [(0, 0) (0, 1) (0, 2)]
     #   [(1, 0) (1, 1) (1, 2)]
@@ -117,7 +134,7 @@ defmodule GameOfLife.GridTest do
         [0, 1]
       ]
 
-      {:ok, grid: Grid.new(cell_matrix)}
+      [grid: Grid.new(cell_matrix)]
     end
 
     test "valid positions", %{grid: grid} do

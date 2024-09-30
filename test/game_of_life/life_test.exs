@@ -19,7 +19,7 @@ defmodule GameOfLife.LifeTest do
   end
 
   test "get_random_stream/1" do
-    stream = Life.get_random_stream()
+    stream = Life.get_random_stream(10, 10)
 
     assert stream |> Enum.take(10) |> Enum.count() == 10
     assert stream |> Enum.take(100) |> Enum.count() == 100

@@ -14,7 +14,7 @@ defmodule GameOfLifeWeb.HomeLive do
       socket
       |> assign(timer_ref: nil)
       |> assign(state: :paused)
-      |> assign(grid: Grid.new_random(@grid_size))
+      |> assign(grid: Grid.new_random(@grid_size, @grid_size))
       |> assign(current_iteration: 1)
 
     {:ok, socket}

@@ -6,7 +6,8 @@ defmodule GameOfLifeCLI.CLI do
 
   @default_options %{
     generations: 5,
-    grid_size: 10
+    rows: 10,
+    columns: 10
   }
 
   @spec main([String.t()]) :: no_return
@@ -20,20 +21,20 @@ defmodule GameOfLifeCLI.CLI do
   def parse_args(args) do
     {options, _, _} =
       OptionParser.parse(args,
-        strict: [generations: :integer, grid_size: :integer],
-        aliases: [g: :generations, s: :grid_size]
+        strict: [generations: :integer, rows: :integer, columns: :integer],
+        aliases: [g: :generations, r: :rows, c: :columns]
       )
 
     Enum.into(options, @default_options)
   end
 
-  defp start_game_of_life(%{generations: max_generations, grid_size: grid_size}) do
+  defp start_game_of_life(%{generations: max_generations, rows: rows, columns: columns}) do
     information_lines = 1
     borders_top_and_bottom = 2
-    number_of_lines_printed = grid_size + borders_top_and_bottom + information_lines
+    number_of_lines_printed = rows + borders_top_and_bottom + information_lines
 
-    grid_size
-    |> Life.get_random_stream()
+    rows
+    |> Life.get_random_stream(columns)
     |> Stream.take(max_generations)
     |> Stream.map(&to_string/1)
     |> Stream.with_index(1)
