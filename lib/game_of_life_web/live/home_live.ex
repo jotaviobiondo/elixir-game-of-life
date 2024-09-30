@@ -3,20 +3,19 @@ defmodule GameOfLifeWeb.HomeLive do
 
   alias GameOfLife.Life
   alias GameOfLife.Grid
+  alias Phoenix.LiveView.Socket
 
-  @grid_size 10
+  @grid_size 50
+  @update_interval to_timeout(millisecond: 100)
 
   @impl true
-  def mount(_params, _session, socket) do
-    grid = Grid.new_random(@grid_size)
-
+  def mount(_params, _session, %Socket{} = socket) do
     socket =
-      assign(
-        socket,
-        tref: nil,
-        state: :stopped,
-        grid: grid
-      )
+      socket
+      |> assign(timer_ref: nil)
+      |> assign(state: :paused)
+      |> assign(grid: Grid.new_random(@grid_size))
+      |> assign(current_iteration: 1)
 
     {:ok, socket}
   end
@@ -24,66 +23,86 @@ defmodule GameOfLifeWeb.HomeLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <section class="d-flex flex-column align-items-center" style="width: 100%">
-      <div style="white-space: pre;font-family: monospace;">
-        <%= raw(grid_to_html(@grid)) %>
+    <section>
+      <div>
+        <div>
+          <.button
+            type="button"
+            phx-click="start"
+            disabled={@state == :running}
+            class="disabled:opacity-50 disabled:pointer-events-none"
+          >
+            Start
+          </.button>
+
+          <.button
+            type="button"
+            phx-click="stop"
+            disabled={@state == :paused}
+            class="disabled:opacity-50 disabled:pointer-events-none"
+          >
+            Pause
+          </.button>
+        </div>
+      </div>
+
+      <div id="gridContainer" class="border">
+        <table id="grid">
+          <tr :for={row <- 0..(@grid.size - 1)}>
+            <td
+              :for={col <- 0..(@grid.size - 1)}
+              class="border border-black text-center w-[15px] h-[15px] data-[alive]:bg-black"
+              data-alive={Grid.get_cell(@grid, {row, col}) == :alive}
+            >
+            </td>
+          </tr>
+        </table>
       </div>
 
       <div>
-        <.button
-          type="button"
-          phx-click="start"
-          phx-disable-with="Starting..."
-          disabled={@state == :running}
-          class="disabled:opacity-50 disabled:pointer-events-none"
-        >
-          Start
-        </.button>
-
-        <.button
-          type="button"
-          phx-click="stop"
-          phx-disable-with="Stopping..."
-          disabled={@state == :stopped}
-          class="disabled:opacity-50 disabled:pointer-events-none"
-        >
-          Stop
-        </.button>
+        Current generation: <%= @current_iteration %>
       </div>
     </section>
     """
   end
 
   @impl true
-  def handle_event("start", _params, socket) do
-    {:ok, tref} = :timer.send_interval(1000, self(), :update)
+  def handle_event("start", _params, %Socket{} = socket) do
+    %{state: state} = socket.assigns
 
-    socket = assign(socket, state: :running, tref: tref)
+    socket =
+      case state do
+        :paused -> socket |> assign(state: :running) |> call_next_generation()
+        :running -> socket
+      end
 
     {:noreply, socket}
   end
 
   @impl true
   def handle_event("stop", _params, socket) do
-    :timer.cancel(socket.assigns.tref)
-
-    socket = assign(socket, state: :stopped, tref: nil)
+    Process.cancel_timer(socket.assigns.timer_ref)
+    socket = assign(socket, state: :paused, timer_ref: nil)
 
     {:noreply, socket}
   end
 
   @impl true
-  def handle_info(:update, socket) do
-    %{grid: grid} = socket.assigns
+  def handle_info(:next_generation, %Socket{} = socket) do
+    %{grid: grid, current_iteration: current_iteration} = socket.assigns
 
     next_generation = Life.next_generation(grid)
 
-    {:noreply, assign(socket, grid: next_generation)}
+    socket =
+      socket
+      |> assign(grid: next_generation, current_iteration: current_iteration + 1)
+      |> call_next_generation()
+
+    {:noreply, socket}
   end
 
-  def grid_to_html(grid) do
-    grid
-    |> to_string()
-    |> String.replace("\n", "<br>")
+  defp call_next_generation(%Socket{} = socket) do
+    timer_ref = Process.send_after(self(), :next_generation, @update_interval)
+    assign(socket, timer_ref: timer_ref)
   end
 end
