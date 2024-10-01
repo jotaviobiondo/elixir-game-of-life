@@ -6,23 +6,24 @@ defmodule GameOfLife.GridTest do
   describe "new!/1" do
     test "valid cell matrix" do
       assert %Grid{
-        rows: 2,
-        cols: 2,
-        cells: %{
+               rows: 2,
+               cols: 2,
+               cells: %{
                  {0, 0} => :alive,
                  {0, 1} => :alive,
                  {1, 0} => :dead,
                  {1, 1} => :dead
                }
-      } = Grid.new!([
-        [1, 1],
-        [0, 0]
-      ])
+             } =
+               Grid.new!([
+                 [1, 1],
+                 [0, 0]
+               ])
 
       assert %Grid{
-        rows: 2,
-        cols: 3,
-        cells: %{
+               rows: 2,
+               cols: 3,
+               cells: %{
                  {0, 0} => :alive,
                  {0, 1} => :alive,
                  {0, 2} => :dead,
@@ -30,15 +31,16 @@ defmodule GameOfLife.GridTest do
                  {1, 1} => :dead,
                  {1, 2} => :alive
                }
-      } = Grid.new!([
-        [1, 1, 0],
-        [0, 0, 1]
-      ])
+             } =
+               Grid.new!([
+                 [1, 1, 0],
+                 [0, 0, 1]
+               ])
 
       assert %Grid{
-        rows: 3,
-        cols: 2,
-        cells: %{
+               rows: 3,
+               cols: 2,
+               cells: %{
                  {0, 0} => :alive,
                  {0, 1} => :alive,
                  {1, 0} => :dead,
@@ -46,11 +48,12 @@ defmodule GameOfLife.GridTest do
                  {2, 0} => :alive,
                  {2, 1} => :dead
                }
-      } = Grid.new!([
-        [1, 1],
-        [0, 0],
-        [1, 0]
-      ])
+             } =
+               Grid.new!([
+                 [1, 1],
+                 [0, 0],
+                 [1, 0]
+               ])
     end
 
     test "empty cell matrix" do
@@ -64,7 +67,9 @@ defmodule GameOfLife.GridTest do
         [0, 0]
       ]
 
-      assert_raise(ArgumentError, "matrix doesn't have rows with equal number of elements", fn -> Grid.new!(cell_matrix) end)
+      assert_raise(ArgumentError, "matrix doesn't have rows with equal number of elements", fn ->
+        Grid.new!(cell_matrix)
+      end)
     end
   end
 
@@ -74,6 +79,7 @@ defmodule GameOfLife.GridTest do
     assert 3 == grid.rows
     assert 2 == grid.cols
     assert 6 == Enum.count(grid.cells)
+
     assert grid.cells
            |> Map.values()
            |> Enum.all?(&(&1 in [:alive, :dead]))
