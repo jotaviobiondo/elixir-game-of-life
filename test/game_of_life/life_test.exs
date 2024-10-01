@@ -1,5 +1,5 @@
 defmodule GameOfLife.LifeTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   alias GameOfLife.Grid
   alias GameOfLife.Life

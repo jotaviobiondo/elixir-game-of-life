@@ -1,5 +1,5 @@
 defmodule GameOfLifeWeb.PageControllerTest do
-  use GameOfLifeWeb.ConnCase
+  use GameOfLifeWeb.ConnCase, async: true
 
   test "GET /", %{conn: conn} do
     conn = get(conn, ~p"/other")

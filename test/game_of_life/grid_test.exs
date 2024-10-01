@@ -1,5 +1,6 @@
 defmodule GameOfLife.GridTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
+
   alias GameOfLife.Grid
 
   describe "new!/1" do

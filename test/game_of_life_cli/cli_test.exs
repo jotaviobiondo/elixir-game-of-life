@@ -1,5 +1,6 @@
 defmodule GameOfLifeCLI.CLITest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
+
   alias GameOfLifeCLI.CLI
 
   describe "parse_args/1" do

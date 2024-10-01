@@ -1,5 +1,6 @@
 defmodule GameOfLife.CellTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
+
   alias GameOfLife.Cell
 
   test "random/0 only contains :dead or :alive values" do
