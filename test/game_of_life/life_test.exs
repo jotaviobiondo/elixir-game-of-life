@@ -1,9 +1,10 @@
 defmodule GameOfLife.LifeTest do
   use ExUnit.Case
+
   alias GameOfLife.Grid
   alias GameOfLife.Life
 
-  test "get_stream/1" do
+  test "stream_generations/1" do
     cell_matrix = [
       [0, 0, 0, 0],
       [0, 0, 0, 0],
@@ -11,19 +12,11 @@ defmodule GameOfLife.LifeTest do
       [0, 0, 0, 0]
     ]
 
-    stream = Life.get_stream(cell_matrix)
+    stream = cell_matrix |> Grid.new!() |> Life.stream_generations()
 
-    assert stream |> Enum.take(10) |> Enum.count() == 10
-    assert stream |> Enum.take(100) |> Enum.count() == 100
-    assert stream |> Enum.take(1000) |> Enum.count() == 1000
-  end
-
-  test "get_random_stream/1" do
-    stream = Life.get_random_stream(10, 10)
-
-    assert stream |> Enum.take(10) |> Enum.count() == 10
-    assert stream |> Enum.take(100) |> Enum.count() == 100
-    assert stream |> Enum.take(1000) |> Enum.count() == 1000
+    assert 10 == stream |> Enum.take(10) |> Enum.count()
+    assert 100 == stream |> Enum.take(100) |> Enum.count()
+    assert 1000 == stream |> Enum.take(1000) |> Enum.count()
   end
 
   describe "next_generation/1" do
@@ -36,18 +29,18 @@ defmodule GameOfLife.LifeTest do
         [0, 0, 0, 0]
       ]
 
-      assert Grid.new(cell_matrix)
-             |> Life.next_generation()
-             |> Life.next_generation()
-             |> to_string() ==
-               """
-               +---------------+
-               |   |   |   |   |
-               |   | x | x |   |
-               |   | x | x |   |
-               |   |   |   |   |
-               +---------------+
-               """
+      assert """
+             +---------------+
+             |   |   |   |   |
+             |   | x | x |   |
+             |   | x | x |   |
+             |   |   |   |   |
+             +---------------+
+             """ ==
+               Grid.new!(cell_matrix)
+               |> Life.next_generation()
+               |> Life.next_generation()
+               |> to_string()
     end
 
     # https://en.wikipedia.org/wiki/Oscillator_(cellular_automaton)
@@ -60,29 +53,27 @@ defmodule GameOfLife.LifeTest do
         [0, 0, 0, 0, 0]
       ]
 
-      first_generation = Grid.new(cell_matrix) |> Life.next_generation()
+      first_generation = Grid.new!(cell_matrix) |> Life.next_generation()
 
-      assert first_generation |> to_string() ==
-               """
-               +-------------------+
-               |   |   |   |   |   |
-               |   |   |   |   |   |
-               |   | x | x | x |   |
-               |   |   |   |   |   |
-               |   |   |   |   |   |
-               +-------------------+
-               """
+      assert """
+             +-------------------+
+             |   |   |   |   |   |
+             |   |   |   |   |   |
+             |   | x | x | x |   |
+             |   |   |   |   |   |
+             |   |   |   |   |   |
+             +-------------------+
+             """ == to_string(first_generation)
 
-      assert first_generation |> Life.next_generation() |> to_string() ==
-               """
-               +-------------------+
-               |   |   |   |   |   |
-               |   |   | x |   |   |
-               |   |   | x |   |   |
-               |   |   | x |   |   |
-               |   |   |   |   |   |
-               +-------------------+
-               """
+      assert """
+             +-------------------+
+             |   |   |   |   |   |
+             |   |   | x |   |   |
+             |   |   | x |   |   |
+             |   |   | x |   |   |
+             |   |   |   |   |   |
+             +-------------------+
+             """ == first_generation |> Life.next_generation() |> to_string()
     end
 
     # https://en.wikipedia.org/wiki/Spaceship_(cellular_automaton)
@@ -96,61 +87,57 @@ defmodule GameOfLife.LifeTest do
         [0, 0, 0, 0, 0, 0]
       ]
 
-      first_generation = Grid.new(cell_matrix) |> Life.next_generation()
+      first_generation = Grid.new!(cell_matrix) |> Life.next_generation()
 
-      assert first_generation |> to_string() ==
-               """
-               +-----------------------+
-               |   |   |   |   |   |   |
-               |   |   | x |   |   |   |
-               |   |   |   | x | x |   |
-               |   |   | x | x |   |   |
-               |   |   |   |   |   |   |
-               |   |   |   |   |   |   |
-               +-----------------------+
-               """
+      assert """
+             +-----------------------+
+             |   |   |   |   |   |   |
+             |   |   | x |   |   |   |
+             |   |   |   | x | x |   |
+             |   |   | x | x |   |   |
+             |   |   |   |   |   |   |
+             |   |   |   |   |   |   |
+             +-----------------------+
+             """ == to_string(first_generation)
 
       second_generation = Life.next_generation(first_generation)
 
-      assert second_generation |> to_string() ==
-               """
-               +-----------------------+
-               |   |   |   |   |   |   |
-               |   |   |   | x |   |   |
-               |   |   |   |   | x |   |
-               |   |   | x | x | x |   |
-               |   |   |   |   |   |   |
-               |   |   |   |   |   |   |
-               +-----------------------+
-               """
+      assert """
+             +-----------------------+
+             |   |   |   |   |   |   |
+             |   |   |   | x |   |   |
+             |   |   |   |   | x |   |
+             |   |   | x | x | x |   |
+             |   |   |   |   |   |   |
+             |   |   |   |   |   |   |
+             +-----------------------+
+             """ == to_string(second_generation)
 
       third_generation = Life.next_generation(second_generation)
 
-      assert third_generation |> to_string() ==
-               """
-               +-----------------------+
-               |   |   |   |   |   |   |
-               |   |   |   |   |   |   |
-               |   |   | x |   | x |   |
-               |   |   |   | x | x |   |
-               |   |   |   | x |   |   |
-               |   |   |   |   |   |   |
-               +-----------------------+
-               """
+      assert """
+             +-----------------------+
+             |   |   |   |   |   |   |
+             |   |   |   |   |   |   |
+             |   |   | x |   | x |   |
+             |   |   |   | x | x |   |
+             |   |   |   | x |   |   |
+             |   |   |   |   |   |   |
+             +-----------------------+
+             """ == to_string(third_generation)
 
       fourth_generation = Life.next_generation(third_generation)
 
-      assert fourth_generation |> to_string() ==
-               """
-               +-----------------------+
-               |   |   |   |   |   |   |
-               |   |   |   |   |   |   |
-               |   |   |   |   | x |   |
-               |   |   | x |   | x |   |
-               |   |   |   | x | x |   |
-               |   |   |   |   |   |   |
-               +-----------------------+
-               """
+      assert """
+             +-----------------------+
+             |   |   |   |   |   |   |
+             |   |   |   |   |   |   |
+             |   |   |   |   | x |   |
+             |   |   | x |   | x |   |
+             |   |   |   | x | x |   |
+             |   |   |   |   |   |   |
+             +-----------------------+
+             """ == to_string(fourth_generation)
     end
   end
 end

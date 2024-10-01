@@ -20,8 +20,8 @@ defmodule GameOfLife.Grid do
   @enforce_keys [:cells, :rows, :cols]
   defstruct [:cells, :rows, :cols]
 
-  @spec new(cell_matrix) :: t
-  def new(cell_matrix) do
+  @spec new!(cell_matrix) :: t
+  def new!(cell_matrix) do
     with {:ok, cell_matrix} <- validate_not_empty(cell_matrix),
          {:ok, cell_matrix} <- validate_matrix_dimension(cell_matrix) do
       rows = Enum.count(cell_matrix)
@@ -61,14 +61,14 @@ defmodule GameOfLife.Grid do
     end
   end
 
-  @spec new_random(rows :: pos_integer(), cols :: pos_integer()) :: t
-  def new_random(rows, cols) do
+  @spec random(rows :: pos_integer(), cols :: pos_integer()) :: t
+  def random(rows, cols) do
     (&Cell.random/0)
     |> Stream.repeatedly()
     |> Stream.take(rows * cols)
     |> Stream.map(&Cell.to_int/1)
     |> Enum.chunk_every(cols)
-    |> new()
+    |> new!()
   end
 
   @spec neighbors(t, position) :: MapSet.t(position)
@@ -85,8 +85,8 @@ defmodule GameOfLife.Grid do
   @spec inside_grid?(t, position) :: boolean
   defp inside_grid?(grid, {x, y}), do: x in 0..(grid.rows - 1) and y in 0..(grid.cols - 1)
 
-  @spec live_neighbors(t, position) :: non_neg_integer
-  def live_neighbors(grid, cell_position) do
+  @spec count_neighbors_alive(t, position) :: non_neg_integer
+  def count_neighbors_alive(grid, cell_position) do
     grid
     |> neighbors(cell_position)
     |> Enum.map(fn neighbor -> get_cell(grid, neighbor) end)

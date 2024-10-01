@@ -7,25 +7,12 @@ defmodule GameOfLife.Life do
   alias GameOfLife.Cell
 
   @doc """
-  Returns a infinite enumerable where each element is the next generation of the previous one.
-  The first generation starts with the provided 'cell_matrix' argument.
+  Returns an infinite stream where each element is the next generation of the previous one.
+  The first generation starts with the provided 'grid' argument.
   """
-  @spec get_stream(Grid.cell_matrix()) :: Enumerable.t()
-  def get_stream(cell_matrix) do
-    cell_matrix
-    |> Grid.new()
-    |> Stream.iterate(&next_generation/1)
-  end
-
-  @doc """
-  Returns a infinite enumerable where each element is the next generation of the previous one.
-  The first generation is a random grid with the size provided by the arguments 'rows' and `columns`.
-  """
-  @spec get_random_stream(rows :: pos_integer(), columns :: pos_integer()) :: Enumerable.t()
-  def get_random_stream(rows, columns) do
-    rows
-    |> Grid.new_random(columns)
-    |> Stream.iterate(&next_generation/1)
+  @spec stream_generations(Grid.t()) :: Stream.t()
+  def stream_generations(%Grid{} = grid) do
+    Stream.iterate(grid, &next_generation/1)
   end
 
   @spec next_generation(Grid.t()) :: Grid.t()
@@ -37,7 +24,7 @@ defmodule GameOfLife.Life do
 
   @spec next_cell_generation(Grid.t(), {Grid.position(), Cell.t()}) :: {Grid.position(), Cell.t()}
   defp next_cell_generation(grid, {cell_position, cell_state}) do
-    case {cell_state, Grid.live_neighbors(grid, cell_position)} do
+    case {cell_state, Grid.count_neighbors_alive(grid, cell_position)} do
       {:alive, 2} -> {cell_position, :alive}
       {:alive, 3} -> {cell_position, :alive}
       {:dead, 3} -> {cell_position, :alive}

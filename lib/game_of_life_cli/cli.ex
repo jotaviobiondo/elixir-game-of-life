@@ -3,6 +3,13 @@ defmodule GameOfLifeCLI.CLI do
   Module that provides the Command Line Interface to run the game of life on terminal.
   """
   alias GameOfLife.Life
+  alias GameOfLife.Grid
+
+  @type options :: %{
+          generations: pos_integer(),
+          rows: pos_integer(),
+          columns: pos_integer()
+        }
 
   @default_options %{
     generations: 5,
@@ -17,7 +24,7 @@ defmodule GameOfLifeCLI.CLI do
     |> start_game_of_life()
   end
 
-  @spec parse_args([String.t()]) :: %{generations: pos_integer, grid_size: pos_integer}
+  @spec parse_args([String.t()]) :: options()
   def parse_args(args) do
     {options, _, _} =
       OptionParser.parse(args,
@@ -34,7 +41,8 @@ defmodule GameOfLifeCLI.CLI do
     number_of_lines_printed = rows + borders_top_and_bottom + information_lines
 
     rows
-    |> Life.get_random_stream(columns)
+    |> Grid.random(columns)
+    |> Life.stream_generations()
     |> Stream.take(max_generations)
     |> Stream.map(&to_string/1)
     |> Stream.with_index(1)
