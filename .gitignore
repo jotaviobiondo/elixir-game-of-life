@@ -38,3 +38,5 @@ npm-debug.log
 .DS_Store
 game_of_life
 !*/game_of_life
+
+TODO.md
