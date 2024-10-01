@@ -48,9 +48,9 @@ defmodule GameOfLifeWeb.HomeLive do
 
       <div id="gridContainer" class="border">
         <table id="grid">
-          <tr :for={row <- 0..(@grid.size - 1)}>
+          <tr :for={row <- 0..(@grid.rows - 1)}>
             <td
-              :for={col <- 0..(@grid.size - 1)}
+              :for={col <- 0..(@grid.cols - 1)}
               class="border border-black text-center w-[15px] h-[15px] data-[alive]:bg-black"
               data-alive={Grid.get_cell(@grid, {row, col}) == :alive}
             >
