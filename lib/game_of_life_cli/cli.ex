@@ -44,15 +44,13 @@ defmodule GameOfLifeCLI.CLI do
     |> Grid.random(columns)
     |> Life.stream_generations()
     |> Stream.take(max_generations)
-    |> Stream.map(&to_string/1)
-    |> Stream.with_index(1)
-    |> Enum.each(fn {grid_str, current_generation} ->
-      grid_str |> with_color(:blue) |> IO.write()
-      "Generation: #{current_generation}/#{max_generations}" |> with_color(:yellow) |> IO.puts()
+    |> Enum.each(fn %Grid{} = grid ->
+      grid |> to_string() |> with_color(:blue) |> IO.write()
+      "Generation: #{grid.generation}/#{max_generations}" |> with_color(:yellow) |> IO.puts()
 
       Process.sleep(100)
 
-      last_generation? = current_generation == max_generations
+      last_generation? = grid.generation == max_generations
 
       if not last_generation? do
         for _i <- 1..number_of_lines_printed, do: clear_line()

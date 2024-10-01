@@ -19,7 +19,7 @@ defmodule GameOfLife.Life do
   def next_generation(%Grid{} = grid) do
     new_cells = Map.new(grid.cells, fn cell -> next_cell_generation(grid, cell) end)
 
-    %Grid{grid | cells: new_cells}
+    %Grid{grid | cells: new_cells, generation: grid.generation + 1}
   end
 
   @spec next_cell_generation(Grid.t(), {Grid.position(), Cell.t()}) :: {Grid.position(), Cell.t()}

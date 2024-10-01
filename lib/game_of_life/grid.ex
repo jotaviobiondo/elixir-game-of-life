@@ -14,11 +14,12 @@ defmodule GameOfLife.Grid do
   @type t :: %__MODULE__{
           cells: cells,
           rows: pos_integer(),
-          cols: pos_integer()
+          cols: pos_integer(),
+          generation: pos_integer()
         }
 
-  @enforce_keys [:cells, :rows, :cols]
-  defstruct [:cells, :rows, :cols]
+  @enforce_keys [:cells, :rows, :cols, :generation]
+  defstruct [:cells, :rows, :cols, :generation]
 
   @spec new!(cell_matrix) :: t
   def new!(cell_matrix) do
@@ -29,7 +30,7 @@ defmodule GameOfLife.Grid do
 
       cells = matrix_to_cells(cell_matrix, rows, cols)
 
-      %Grid{cells: cells, rows: rows, cols: cols}
+      %Grid{cells: cells, rows: rows, cols: cols, generation: 1}
     else
       {:error, reason} -> raise(ArgumentError, reason)
     end

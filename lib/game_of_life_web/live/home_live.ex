@@ -15,7 +15,6 @@ defmodule GameOfLifeWeb.HomeLive do
       |> assign(timer_ref: nil)
       |> assign(state: :paused)
       |> assign(grid: Grid.random(@grid_size, @grid_size))
-      |> assign(current_iteration: 1)
 
     {:ok, socket}
   end
@@ -60,7 +59,7 @@ defmodule GameOfLifeWeb.HomeLive do
       </div>
 
       <div>
-        Current generation: <%= @current_iteration %>
+        Current generation: <%= @grid.generation %>
       </div>
     </section>
     """
@@ -89,13 +88,13 @@ defmodule GameOfLifeWeb.HomeLive do
 
   @impl true
   def handle_info(:next_generation, %Socket{} = socket) do
-    %{grid: grid, current_iteration: current_iteration} = socket.assigns
+    %{grid: grid} = socket.assigns
 
     next_generation = Life.next_generation(grid)
 
     socket =
       socket
-      |> assign(grid: next_generation, current_iteration: current_iteration + 1)
+      |> assign(grid: next_generation)
       |> call_next_generation()
 
     {:noreply, socket}
