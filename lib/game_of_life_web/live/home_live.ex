@@ -25,22 +25,20 @@ defmodule GameOfLifeWeb.HomeLive do
     <section>
       <div>
         <div>
-          <.button
-            type="button"
-            phx-click="start"
-            disabled={@state == :running}
-            class="disabled:opacity-50 disabled:pointer-events-none"
-          >
-            Start
+          <.button :if={@state == :paused} phx-click="start">
+            <.icon name="hero-play" class="size-5" /> Start
           </.button>
 
-          <.button
-            type="button"
-            phx-click="stop"
-            disabled={@state == :paused}
-            class="disabled:opacity-50 disabled:pointer-events-none"
-          >
-            Pause
+          <.button :if={@state == :running} phx-click="stop">
+            <.icon name="hero-pause" class="size-5" /> Pause
+          </.button>
+
+          <.button phx-click="random_grid" disabled={@state == :running}>
+            Random
+          </.button>
+
+          <.button phx-click="clear_grid" disabled={@state == :running}>
+            Clear
           </.button>
         </div>
       </div>
@@ -84,6 +82,18 @@ defmodule GameOfLifeWeb.HomeLive do
     Process.cancel_timer(socket.assigns.timer_ref)
     socket = assign(socket, state: :paused, timer_ref: nil)
 
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("random_grid", _params, %Socket{} = socket) do
+    socket = assign(socket, grid: Grid.random(@grid_size, @grid_size))
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("clear_grid", _params, %Socket{} = socket) do
+    socket = update(socket, :grid, &Grid.clear/1)
     {:noreply, socket}
   end
 

@@ -218,7 +218,7 @@ defmodule GameOfLifeWeb.CoreComponents do
       <.button>Send!</.button>
       <.button phx-click="go" class="ml-2">Send!</.button>
   """
-  attr :type, :string, default: nil
+  attr :type, :string, default: "button"
   attr :class, :string, default: nil
   attr :rest, :global, include: ~w(disabled form name value)
 
@@ -231,6 +231,7 @@ defmodule GameOfLifeWeb.CoreComponents do
       class={[
         "phx-submit-loading:opacity-75 rounded-lg bg-zinc-900 hover:bg-zinc-700 py-2 px-3",
         "text-sm font-semibold leading-6 text-white active:text-white/80",
+        "disabled:opacity-50 disabled:pointer-events-none",
         @class
       ]}
       {@rest}

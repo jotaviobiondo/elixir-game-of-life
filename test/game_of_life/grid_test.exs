@@ -85,6 +85,29 @@ defmodule GameOfLife.GridTest do
            |> Enum.all?(&(&1 in [:alive, :dead]))
   end
 
+  describe "clear/1" do
+    test "should set all cells to :dead" do
+      matrix = [
+        [1, 1],
+        [1, 1]
+      ]
+
+      grid = matrix |> Grid.new!() |> struct!(generation: 7)
+
+      assert %Grid{
+               rows: 2,
+               cols: 2,
+               generation: 1,
+               cells: %{
+                 {0, 0} => :dead,
+                 {0, 1} => :dead,
+                 {1, 0} => :dead,
+                 {1, 1} => :dead
+               }
+             } = Grid.clear(grid)
+    end
+  end
+
   test "neighbors/2" do
     grid = Grid.random(3, 3)
 
@@ -180,10 +203,22 @@ defmodule GameOfLife.GridTest do
     end
 
     test "should raise when position is outside the grid", %{grid: grid} do
-      assert_raise(ArgumentError, "position given is outside the grid. Got '{-1, 0}'", fn -> Grid.toggle_cell(grid, {-1, 0}) end)
-      assert_raise(ArgumentError, "position given is outside the grid. Got '{0, -1}'", fn -> Grid.toggle_cell(grid, {0, -1}) end)
-      assert_raise(ArgumentError, "position given is outside the grid. Got '{2, 0}'", fn -> Grid.toggle_cell(grid, {2, 0}) end)
-      assert_raise(ArgumentError, "position given is outside the grid. Got '{0, 2}'", fn -> Grid.toggle_cell(grid, {0, 2}) end)
+      assert_raise(ArgumentError, "position given is outside the grid. Got '{-1, 0}'", fn ->
+        Grid.toggle_cell(grid, {-1, 0})
+      end)
+
+      assert_raise(ArgumentError, "position given is outside the grid. Got '{0, -1}'", fn ->
+        Grid.toggle_cell(grid, {0, -1})
+      end)
+
+      assert_raise(ArgumentError, "position given is outside the grid. Got '{2, 0}'", fn ->
+        Grid.toggle_cell(grid, {2, 0})
+      end)
+
+      assert_raise(ArgumentError, "position given is outside the grid. Got '{0, 2}'", fn ->
+        Grid.toggle_cell(grid, {0, 2})
+      end)
+
       assert %Grid{} = Grid.toggle_cell(grid, {0, 0})
       assert %Grid{} = Grid.toggle_cell(grid, {0, 1})
       assert %Grid{} = Grid.toggle_cell(grid, {1, 0})
