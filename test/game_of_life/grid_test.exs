@@ -158,6 +158,39 @@ defmodule GameOfLife.GridTest do
     end
   end
 
+  describe "toggle_cell/2" do
+    setup do
+      matrix = [
+        [0, 0],
+        [0, 0]
+      ]
+
+      [grid: Grid.new!(matrix)]
+    end
+
+    test "should toggle the cell value between :alive and :dead", %{grid: grid} do
+      grid
+      |> tap(fn grid -> assert :dead == Grid.get_cell(grid, {0, 0}) end)
+      |> Grid.toggle_cell({0, 0})
+      |> tap(fn grid -> assert :alive == Grid.get_cell(grid, {0, 0}) end)
+      |> Grid.toggle_cell({0, 0})
+      |> tap(fn grid -> assert :dead == Grid.get_cell(grid, {0, 0}) end)
+      |> Grid.toggle_cell({0, 0})
+      |> tap(fn grid -> assert :alive == Grid.get_cell(grid, {0, 0}) end)
+    end
+
+    test "should raise when position is outside the grid", %{grid: grid} do
+      assert_raise(ArgumentError, "position given is outside the grid. Got '{-1, 0}'", fn -> Grid.toggle_cell(grid, {-1, 0}) end)
+      assert_raise(ArgumentError, "position given is outside the grid. Got '{0, -1}'", fn -> Grid.toggle_cell(grid, {0, -1}) end)
+      assert_raise(ArgumentError, "position given is outside the grid. Got '{2, 0}'", fn -> Grid.toggle_cell(grid, {2, 0}) end)
+      assert_raise(ArgumentError, "position given is outside the grid. Got '{0, 2}'", fn -> Grid.toggle_cell(grid, {0, 2}) end)
+      assert %Grid{} = Grid.toggle_cell(grid, {0, 0})
+      assert %Grid{} = Grid.toggle_cell(grid, {0, 1})
+      assert %Grid{} = Grid.toggle_cell(grid, {1, 0})
+      assert %Grid{} = Grid.toggle_cell(grid, {1, 1})
+    end
+  end
+
   test "to_string/1" do
     cell_matrix = [
       [0, 0, 0, 1],

@@ -5,7 +5,7 @@ defmodule GameOfLifeWeb.HomeLive do
   alias GameOfLife.Grid
   alias Phoenix.LiveView.Socket
 
-  @grid_size 50
+  @grid_size 30
   @update_interval to_timeout(millisecond: 100)
 
   @impl true
@@ -50,8 +50,9 @@ defmodule GameOfLifeWeb.HomeLive do
           <tr :for={row <- 0..(@grid.rows - 1)}>
             <td
               :for={col <- 0..(@grid.cols - 1)}
-              class="border border-black text-center w-[15px] h-[15px] data-[alive]:bg-black"
+              class="border border-black text-center w-[20px] h-[20px] data-[alive]:bg-black hover:bg-gray-400"
               data-alive={Grid.get_cell(@grid, {row, col}) == :alive}
+              phx-click={JS.push("cell_clicked", value: %{row: row, col: col})}
             >
             </td>
           </tr>
@@ -79,9 +80,16 @@ defmodule GameOfLifeWeb.HomeLive do
   end
 
   @impl true
-  def handle_event("stop", _params, socket) do
+  def handle_event("stop", _params, %Socket{} = socket) do
     Process.cancel_timer(socket.assigns.timer_ref)
     socket = assign(socket, state: :paused, timer_ref: nil)
+
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("cell_clicked", %{"row" => row, "col" => col} = _params, %Socket{} = socket) do
+    socket = update(socket, :grid, fn grid -> Grid.toggle_cell(grid, {row, col}) end)
 
     {:noreply, socket}
   end

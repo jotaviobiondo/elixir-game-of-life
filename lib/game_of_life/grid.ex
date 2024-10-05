@@ -6,7 +6,7 @@ defmodule GameOfLife.Grid do
   alias GameOfLife.Cell
   alias GameOfLife.Grid
 
-  @type position :: {integer, integer}
+  @type position :: {row :: integer, columns :: integer}
   @type cells :: %{required(position) => Cell.t()}
   @type cell_matrix :: [[integer]]
   @type size :: pos_integer
@@ -36,12 +36,10 @@ defmodule GameOfLife.Grid do
     end
   end
 
-  @spec validate_not_empty(cell_matrix) :: {:ok, cell_matrix} | {:error, String.t()}
   defp validate_not_empty([]), do: {:error, "matrix can not be empty"}
   defp validate_not_empty([[]]), do: {:error, "matrix can not be empty"}
   defp validate_not_empty(matrix), do: {:ok, matrix}
 
-  @spec validate_matrix_dimension(cell_matrix) :: {:ok, cell_matrix} | {:error, String.t()}
   defp validate_matrix_dimension(matrix) do
     first_row_count = matrix |> List.first() |> Enum.count()
     all_rows_has_same_size? = Enum.all?(matrix, fn row -> Enum.count(row) == first_row_count end)
@@ -72,7 +70,7 @@ defmodule GameOfLife.Grid do
     |> new!()
   end
 
-  @spec neighbors(t, position) :: MapSet.t(position)
+  @spec neighbors(t(), position()) :: MapSet.t(position)
   def neighbors(grid, {cell_x, cell_y}) do
     for offset_x <- [-1, 0, 1],
         offset_y <- [-1, 0, 1],
@@ -83,10 +81,10 @@ defmodule GameOfLife.Grid do
     end
   end
 
-  @spec inside_grid?(t, position) :: boolean
+  @spec inside_grid?(t(), position()) :: boolean()
   defp inside_grid?(grid, {x, y}), do: x in 0..(grid.rows - 1) and y in 0..(grid.cols - 1)
 
-  @spec count_neighbors_alive(t, position) :: non_neg_integer
+  @spec count_neighbors_alive(t(), position()) :: non_neg_integer
   def count_neighbors_alive(grid, cell_position) do
     grid
     |> neighbors(cell_position)
@@ -94,18 +92,34 @@ defmodule GameOfLife.Grid do
     |> Enum.count(&(&1 == :alive))
   end
 
-  @spec get_cell(t, position) :: Cell.t()
+  @spec get_cell(t(), position()) :: Cell.t()
   def get_cell(grid, cell_position), do: Map.get(grid.cells, cell_position, :dead)
+
+  @spec toggle_cell(t(), position()) :: t()
+  def toggle_cell(grid, cell_position) do
+    if not inside_grid?(grid, cell_position) do
+      raise ArgumentError, "position given is outside the grid. Got '#{inspect(cell_position)}'"
+    end
+
+    new_cell =
+      case get_cell(grid, cell_position) do
+        :alive -> :dead
+        :dead -> :alive
+      end
+
+    updated_cells = Map.put(grid.cells, cell_position, new_cell)
+    %__MODULE__{grid | cells: updated_cells}
+  end
 
   defimpl String.Chars, for: Grid do
     @spec to_string(Grid.t()) :: String.t()
-    def to_string(grid) do
+    def to_string(%Grid{} = grid) do
       grid_str =
         grid.cells
         |> Map.keys()
         |> Enum.sort()
         |> Enum.map_join("|", fn position ->
-          cell_str = Grid.get_cell(grid, position) |> Cell.to_string()
+          cell_str = grid |> Grid.get_cell(position) |> Cell.to_string()
 
           last_row_index = grid.rows - 1
           last_col_index = grid.cols - 1
