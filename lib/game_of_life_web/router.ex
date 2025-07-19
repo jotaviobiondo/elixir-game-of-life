@@ -17,17 +17,10 @@ defmodule GameOfLifeWeb.Router do
   scope "/" do
     pipe_through :browser
 
-    get "/other", GameOfLifeWeb.PageController, :home
-
     live_session :default do
       live "/", GameOfLifeWeb.HomeLive, :index
     end
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", GameOfLifeWeb do
-  #   pipe_through :api
-  # end
 
   # Enable LiveDashboard in development
   if Application.compile_env(:game_of_life, :dev_routes) do
