@@ -58,7 +58,7 @@ defmodule GameOfLifeWeb.HomeLive do
       </div>
 
       <div>
-        Current generation: <%= @grid.generation %>
+        Current generation: {@grid.generation}
       </div>
     </section>
     """

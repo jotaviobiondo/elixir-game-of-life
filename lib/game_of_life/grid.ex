@@ -73,7 +73,7 @@ defmodule GameOfLife.Grid do
   def clear(%__MODULE__{} = grid) do
     new_cells = Map.new(grid.cells, fn {position, _value} -> {position, :dead} end)
 
-    %__MODULE__{grid | cells: new_cells, generation: 1}
+    %{grid | cells: new_cells, generation: 1}
   end
 
   @spec neighbors(t(), position()) :: MapSet.t(position)
@@ -115,7 +115,7 @@ defmodule GameOfLife.Grid do
       end
 
     updated_cells = Map.put(grid.cells, cell_position, new_cell)
-    %__MODULE__{grid | cells: updated_cells}
+    %{grid | cells: updated_cells}
   end
 
   defimpl String.Chars do
