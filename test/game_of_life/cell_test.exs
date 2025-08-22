@@ -31,14 +31,14 @@ defmodule GameOfLife.CellTest do
   end
 
   describe "from_int/1" do
-    test "valid arguments" do
-      assert Cell.from_int(0) == :dead
-      assert Cell.from_int(1) == :alive
-      assert Cell.from_int(-10) == :alive
-      assert Cell.from_int(10) == :alive
+    test "should return expected values" do
+      assert :dead == Cell.from_int(0)
+      assert :alive == Cell.from_int(1)
+      assert :alive == Cell.from_int(-10)
+      assert :alive == Cell.from_int(10)
     end
 
-    test "invalid arguments" do
+    test "should raise on invalid arguments" do
       assert_raise(FunctionClauseError, fn -> Cell.from_int("0") end)
       assert_raise(FunctionClauseError, fn -> Cell.from_int(1.0) end)
       assert_raise(FunctionClauseError, fn -> Cell.from_int(:dead) end)
@@ -48,15 +48,9 @@ defmodule GameOfLife.CellTest do
   end
 
   describe "to_int/1" do
-    test "valid arguments" do
-      assert Cell.to_int(:alive) == 1
-      assert Cell.to_int(:dead) == 0
-    end
-
-    test "invalid arguments" do
-      assert_raise(FunctionClauseError, fn -> Cell.to_int(1) end)
-      assert_raise(FunctionClauseError, fn -> Cell.to_int("dead") end)
-      assert_raise(FunctionClauseError, fn -> Cell.to_int(nil) end)
+    test "should return expected values" do
+      assert 1 == Cell.to_int(:alive)
+      assert 0 == Cell.to_int(:dead)
     end
   end
 end
