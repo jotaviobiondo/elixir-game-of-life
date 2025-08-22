@@ -26,6 +26,12 @@ mix test
 
 ### Running the CLI
 
+
+
+https://github.com/user-attachments/assets/45b30f58-8a74-4c56-8639-5cff5291ce7d
+
+
+
 To run the CLI, execute the following script:
 ```
 mix cli.run
