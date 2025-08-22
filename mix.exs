@@ -5,10 +5,10 @@ defmodule GameOfLife.MixProject do
     [
       app: :game_of_life,
       version: "0.1.0",
-      elixir: "~> 1.19.0-rc.0",
+      elixir: "~> 1.18",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
-      escript: [main_module: GameOfLifeCLI.CLI],
+      escript: escript(),
       aliases: aliases(),
       deps: deps()
     ]
@@ -18,15 +18,33 @@ defmodule GameOfLife.MixProject do
   #
   # Type `mix help compile.app` for more information.
   def application do
+    if Mix.env() == :cli do
+      []
+    else
+      [
+        mod: {GameOfLife.Application, []},
+        extra_applications: [:logger, :runtime_tools]
+      ]
+    end
+  end
+
+  def cli do
     [
-      mod: {GameOfLife.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      preferred_envs: [
+        "cli.build": :cli,
+        "cli.run": :cli
+      ]
     ]
   end
 
   # Specifies which paths to compile per environment.
   defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(:cli), do: ["lib/game_of_life", "lib/game_of_life_cli"]
   defp elixirc_paths(_), do: ["lib"]
+
+  defp escript do
+    [main_module: GameOfLifeCLI.CLI]
+  end
 
   # Specifies your project dependencies.
   #
@@ -66,6 +84,11 @@ defmodule GameOfLife.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
+      # CLI aliases
+      "cli.build": "escript.build",
+      "cli.run": ["escript.build", "cmd escript game_of_life"],
+
+      # Phoenix aliases
       setup: ["deps.get", "assets.setup", "assets.build"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
       "assets.build": ["tailwind game_of_life", "esbuild game_of_life"],
