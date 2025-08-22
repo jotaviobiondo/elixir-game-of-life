@@ -3,14 +3,14 @@ defmodule GameOfLife.Life do
   Module that provides functions to start the game of life and generate the next generations.
   """
 
-  alias GameOfLife.Grid
   alias GameOfLife.Cell
+  alias GameOfLife.Grid
 
   @doc """
   Returns an infinite stream where each element is the next generation of the previous one.
   The first generation starts with the provided 'grid' argument.
   """
-  @spec stream_generations(Grid.t()) :: Stream.t()
+  @spec stream_generations(Grid.t()) :: Enumerable.t()
   def stream_generations(%Grid{} = grid) do
     Stream.iterate(grid, &next_generation/1)
   end

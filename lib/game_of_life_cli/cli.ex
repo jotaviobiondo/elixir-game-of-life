@@ -2,8 +2,9 @@ defmodule GameOfLifeCLI.CLI do
   @moduledoc """
   Module that provides the Command Line Interface to run the game of life on terminal.
   """
-  alias GameOfLife.Life
+
   alias GameOfLife.Grid
+  alias GameOfLife.Life
 
   @type options :: %{
           generations: pos_integer(),
