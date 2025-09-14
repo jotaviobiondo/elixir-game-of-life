@@ -228,11 +228,18 @@ defmodule GameOfLifeWeb.CoreComponents do
     ~H"""
     <button
       type={@type}
-      class={[
-        "phx-submit-loading:opacity-75 rounded-lg bg-zinc-900 hover:bg-zinc-700 py-2 px-3",
-        "text-sm font-semibold leading-6 text-white active:text-white/80",
-        @class
-      ]}
+      class={
+        [
+          "flex items-center gap-2",
+          "rounded-md py-2 px-3",
+          "text-sm font-semibold leading-6 text-white active:text-white/80 active:scale-97",
+          "ring-1 ring-neutral-100/15 backdrop-blur-xs hover:bg-neutral-400/5",
+          "transition-all duration-100",
+          "phx-submit-loading:opacity-75",
+          "disabled:opacity-60 disabled:pointer-events-none",
+          @class
+        ]
+      }
       {@rest}
     >
       {render_slot(@inner_block)}
@@ -413,31 +420,6 @@ defmodule GameOfLifeWeb.CoreComponents do
       <.icon name="hero-exclamation-circle-mini" class="mt-0.5 h-5 w-5 flex-none" />
       {render_slot(@inner_block)}
     </p>
-    """
-  end
-
-  @doc """
-  Renders a header with title.
-  """
-  attr :class, :string, default: nil
-
-  slot :inner_block, required: true
-  slot :subtitle
-  slot :actions
-
-  def header(assigns) do
-    ~H"""
-    <header class={[@actions != [] && "flex items-center justify-between gap-6", @class]}>
-      <div>
-        <h1 class="text-lg font-semibold leading-8 text-zinc-800">
-          {render_slot(@inner_block)}
-        </h1>
-        <p :if={@subtitle != []} class="mt-2 text-sm leading-6 text-zinc-600">
-          {render_slot(@subtitle)}
-        </p>
-      </div>
-      <div class="flex-none">{render_slot(@actions)}</div>
-    </header>
     """
   end
 
