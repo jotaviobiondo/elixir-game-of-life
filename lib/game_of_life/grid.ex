@@ -20,7 +20,7 @@ defmodule GameOfLife.Grid do
   @enforce_keys [:cells, :rows, :cols, :generation]
   defstruct [:cells, :rows, :cols, :generation]
 
-  @spec new!(cell_matrix) :: t
+  @spec new!(cell_matrix()) :: t()
   def new!(cell_matrix) do
     with {:ok, cell_matrix} <- validate_not_empty(cell_matrix),
          {:ok, cell_matrix} <- validate_matrix_dimension(cell_matrix) do
@@ -31,8 +31,18 @@ defmodule GameOfLife.Grid do
 
       %__MODULE__{cells: cells, rows: rows, cols: cols, generation: 1}
     else
-      {:error, reason} -> raise(ArgumentError, reason)
+      {:error, reason} -> raise ArgumentError, reason
     end
+  end
+
+  @spec empty!(rows :: pos_integer(), cols :: pos_integer()) :: t()
+  def empty!(rows, cols) do
+    cells =
+      for row <- 0..(rows - 1), col <- 0..(cols - 1), into: %{} do
+        {{row, col}, :dead}
+      end
+
+    %__MODULE__{cells: cells, rows: rows, cols: cols, generation: 1}
   end
 
   defp validate_not_empty([]), do: {:error, "matrix can not be empty"}
@@ -116,6 +126,23 @@ defmodule GameOfLife.Grid do
 
     updated_cells = Map.put(grid.cells, cell_position, new_cell)
     %{grid | cells: updated_cells}
+  end
+
+  @doc """
+  Counts the number of live cells in the grid.
+
+  ## Examples
+
+      iex> grid = GameOfLife.Grid.empty!(3, 3)
+      iex> GameOfLife.Grid.count_live_cells(grid)
+      0
+
+  """
+  @spec count_live_cells(t()) :: non_neg_integer()
+  def count_live_cells(%__MODULE__{} = grid) do
+    grid.cells
+    |> Map.values()
+    |> Enum.count(&(&1 == :alive))
   end
 
   defimpl String.Chars do
