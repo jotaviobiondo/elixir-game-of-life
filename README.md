@@ -6,6 +6,8 @@ A [Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) implemen
 The initial implementation was running as a CLI application.
 Later this was improved with an additional LiveView web application.
 
+**Live demo**: https://elixir-game-of-life.onrender.com/
+
 ## Usage
 
 ### Requirements
@@ -43,6 +45,9 @@ The CLI accepts the following optional arguments:
 - `--columns` or `-c`: The columns size of the grid. Default: `10`.
 
 ### Running the LiveView application
+
+<img width="1000" height="1107" alt="image" src="https://github.com/user-attachments/assets/a80a20c0-05de-46fc-84a7-fa9dfcbcc856" />
+
 
 To run the LiveView application, execute the following script:
 ```
