@@ -22,6 +22,12 @@ defmodule GameOfLifeWeb.Router do
     end
   end
 
+  scope "/api" do
+    pipe_through :api
+
+    get "/healthcheck", GameOfLifeWeb.Controllers.HealthcheckController, :healthcheck
+  end
+
   # Enable LiveDashboard in development
   if Application.compile_env(:game_of_life, :dev_routes) do
     # If you want to use the LiveDashboard in production, you should put
